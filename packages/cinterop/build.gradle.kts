@@ -354,10 +354,11 @@ android {
     // Inner externalNativeBuild (inside defaultConfig) does not seem to have correct type for setting path
     externalNativeBuild {
         cmake {
-            // We need to grab cmake version from `cmake --version` on the path and set it here
-            // otherwise the build system will use the one from the NDK
-            @Suppress("UnstableApiUsage")
-            version = project.providers.of(CmakeVersionProvider::class) {}.get()
+            // Android's NDK 23 toolchain requires CMake < 4.0, and the Android SDK CMake cannot
+            // build the macOS/iOS host targets. So pin the Android build to the SDK CMake 3.22.1
+            // (installed in CI, resolved from the SDK), independent of the full CMake on PATH that
+            // the macOS/iOS/JVM host builds use.
+            version = "3.22.1"
             path = project.file("src/jvm/CMakeLists.txt")
         }
     }

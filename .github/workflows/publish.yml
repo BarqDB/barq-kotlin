@@ -56,10 +56,16 @@ jobs:
       - name: Install native build tools
         run: brew install swig ccache
 
-      - name: Pin Android CMake (NDK 23 is incompatible with Homebrew CMake 4.x)
+      - name: Install CMake toolchains for native builds
         run: |
+          # Android's NDK 23 toolchain needs CMake < 4.0; install the SDK CMake for AGP
+          # (the cinterop android build pins version "3.22.1" and resolves it from the SDK).
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "cmake;3.22.1"
-          echo "$ANDROID_HOME/cmake/3.22.1/bin" >> "$GITHUB_PATH"
+          # macOS/iOS/JVM host builds need a FULL CMake (the Android SDK cmake can't detect
+          # the host compiler). Use a full CMake < 4.0 (>= barq-core's 3.22.1 minimum) on PATH.
+          curl -fsSL https://github.com/Kitware/CMake/releases/download/v3.31.7/cmake-3.31.7-macos-universal.tar.gz -o /tmp/cmake.tgz
+          tar -xzf /tmp/cmake.tgz -C /tmp
+          echo "/tmp/cmake-3.31.7-macos-universal/CMake.app/Contents/bin" >> "$GITHUB_PATH"
 
       - name: Validate release tag
         run: |

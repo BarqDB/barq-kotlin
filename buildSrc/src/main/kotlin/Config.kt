@@ -62,7 +62,7 @@ val HOST_OS: OperatingSystem = findHostOs()
 
 object Barq {
     val ciBuild = (System.getenv("CI") != null)
-    const val version = "4.0.4"
+    const val version = "4.0.5"
     const val group = "io.github.barqdb.kotlin"
     const val projectUrl = "https://github.com/BarqDB/barq-kotlin"
     const val pluginPortalId = "io.github.barqdb.kotlin"
