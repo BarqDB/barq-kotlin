@@ -1,0 +1,65 @@
+cmake_minimum_required(VERSION 3.15.0)
+project(BarqKotlin)
+find_package(JNI)
+set(SWIG_JNI_GENERATED "${CMAKE_SOURCE_DIR}/../../../jni-swig-stub/build/generated/sources/jni")
+set(SWIG_JNI_HELPERS "${CMAKE_SOURCE_DIR}/../../../jni-swig-stub/src/main/jni")
+set(CINTEROP_JNI "${CMAKE_SOURCE_DIR}/jni")
+set(BARQ_TARGET_LINK_LIBS BarqFFIStatic Barq::ObjectStore)
+set(CMAKE_CXX_STANDARD 17)
+
+if (CMAKE_SYSTEM_NAME MATCHES "^Windows")
+    MESSAGE("Building JNI for Windows")
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    set(BARQ_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/src" "${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH}/win32" "${CINTEROP_JNI}" "${SWIG_JNI_GENERATED}" "${SWIG_JNI_HELPERS}")
+
+elseif (CMAKE_SYSTEM_NAME MATCHES "^Android")
+    MESSAGE("Building JNI for Android")
+    set(CAPI_BUILD "${CMAKE_SOURCE_DIR}/../../../external/core/build-android-${ANDROID_ABI}-${CMAKE_BUILD_TYPE}")
+    set(BARQ_INCLUDE_DIRS ${CAPI_BUILD}/src ${CINTEROP_JNI} ${SWIG_JNI_GENERATED} ${SWIG_JNI_HELPERS})
+    set(BARQ_TARGET_LINK_LIBS log android BarqFFIStatic Barq::ObjectStore)
+
+elseif (CMAKE_SYSTEM_NAME MATCHES "^Darwin")
+    MESSAGE("Building JNI for Darwin")
+    set(BARQ_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/src" "${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH}/darwin" "${CINTEROP_JNI}" "${SWIG_JNI_GENERATED}" "${SWIG_JNI_HELPERS}")
+
+elseif (CMAKE_SYSTEM_NAME MATCHES "^Linux")
+    MESSAGE("Building JNI for Linux")
+    set(BARQ_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/src" "${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH}/linux" "${CINTEROP_JNI}" "${SWIG_JNI_GENERATED}" "${SWIG_JNI_HELPERS}")
+endif ()
+
+include_directories(${BARQ_INCLUDE_DIRS})
+# Build Barq Core
+# Set option flags for Core.
+# See https://github.com/BarqDB/barq-core/blob/master/CMakeLists.txt#L174 for the full list.
+set(BARQ_ENABLE_SYNC ON)
+set(BARQ_BUILD_LIB_ONLY ON)
+add_subdirectory("${CMAKE_SOURCE_DIR}/../../../external/core" core EXCLUDE_FROM_ALL)
+
+if(ANDROID)
+    if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-gc-sections -Wl,--exclude-libs,ALL")
+    endif()
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
+endif()
+
+file(GLOB jni_SRC
+        "${CINTEROP_JNI}/env_utils.cpp"
+        "${CINTEROP_JNI}/utils.cpp"
+        "${CINTEROP_JNI}/java_global_ref_by_move.cpp"
+        "${CINTEROP_JNI}/java_class_global_def.cpp"
+        "${CINTEROP_JNI}/java_class.cpp"
+        "${CINTEROP_JNI}/java_method.cpp"
+        )
+
+file(GLOB swig_SRC
+        ${SWIG_JNI_GENERATED}/barqc.cpp
+        ${SWIG_JNI_HELPERS}/barq_api_helpers.cpp
+        )
+
+add_library(barqc SHARED
+        ${swig_SRC}
+        ${jni_SRC}
+        )
+
+target_link_libraries(barqc ${BARQ_TARGET_LINK_LIBS})

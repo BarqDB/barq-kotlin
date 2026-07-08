@@ -1,0 +1,4 @@
+[submodule "external/core"]
+	path = packages/external/core
+	url = https://github.com/BarqDB/barq-core.git
+	branch = main

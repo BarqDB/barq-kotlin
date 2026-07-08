@@ -1,0 +1,48 @@
+headers = barq.h barq/error_codes.h
+headerFilter = barq.h barq/error_codes.h
+compilerOpts = -DBARQ_APP_SERVICES=1
+// Relative paths in def file depends are resolved differently dependent on execution
+// location
+// https://youtrack.jetbrains.com/issue/KT-43439
+// https://github.com/JetBrains/kotlin-native/issues/2314
+// ... and def file does not support using environment variables
+// https://github.com/JetBrains/kotlin-native/issues/3631
+// so resolving paths through gradle
+// staticLibraries = libbarq-ffi-static-dbg.a libbarq-dbg.a libbarq-parser-dbg.a libbarq-object-store-dbg.a
+// libraryPaths.macos_x64 = ../external/core/build-macos_x64/src/barq/object-store/c_api ../external/core/build-macos_x64/src/barq ../external/core/build-macos_x64/src/barq/parser ../external/core/build-macos_x64/src/barq/object-store/
+// libraryPaths.ios_x64 = ../external/core/build-macos_x64/src/barq/object-store/c_api ../external/core/build-macos_x64/src/barq ../external/core/build-macos_x64/src/barq/parser ../external/core/build-macos_x64/src/barq/object-store/
+linkerOpts = -lcompression -lz -framework Foundation -framework CoreFoundation -framework Security
+strictEnums = barq_errno barq_error_category barq_sync_errno_client barq_sync_errno_connection barq_sync_errno_session barq_web_socket_errno barq_sync_socket_callback_result
+
+// We don't want to convert Websocket binary data to String
+noStringConversion = barq_sync_socket_websocket_message
+
+---
+#include <pthread.h>
+#include <time.h>
+#include <stdio.h>
+
+/* Mutex */
+typedef struct native_pthread_mutex {
+    pthread_mutex_t mutex;
+} native_pthread_mutex_t;
+
+
+static inline int native_pthread_mutex_create(native_pthread_mutex_t *mutex) {
+    pthread_mutexattr_t attributes;
+    pthread_mutexattr_init(&attributes);
+    pthread_mutexattr_settype(&attributes, PTHREAD_MUTEX_RECURSIVE);
+    return pthread_mutex_init(&mutex->mutex, &attributes);
+}
+
+static inline int native_pthread_mutex_lock(native_pthread_mutex_t* mutex) {
+    return pthread_mutex_lock(&mutex->mutex);
+}
+
+static inline int native_pthread_mutex_unlock(native_pthread_mutex_t* mutex) {
+    return pthread_mutex_unlock(&mutex->mutex);
+}
+
+static inline int native_pthread_mutex_destroy(native_pthread_mutex_t* mutex) {
+    return pthread_mutex_destroy(&mutex->mutex);
+}
