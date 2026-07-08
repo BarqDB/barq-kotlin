@@ -22,8 +22,8 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 
 /**
@@ -78,9 +78,9 @@ public enum class BarqStorageType(public val kClass: KClass<*>) {
     TIMESTAMP(BarqInstant::class),
 
     /**
-     * Storage type for properties of type [BsonObjectId].
+     * Storage type for properties of type [ObjectId].
      */
-    OBJECT_ID(BsonObjectId::class),
+    OBJECT_ID(ObjectId::class),
 
     /**
      * Storage type for properties of type [BarqUUID].

@@ -48,8 +48,8 @@ import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 
@@ -69,7 +69,7 @@ class SerializableSample : BarqObject {
     // We will loose nano second precision when we round trip these, so framework only works for
     // timestamps with 0-nanosecond fraction.
     var timestampField: BarqInstant = BarqInstant.from(100, 1000000)
-    var bsonObjectIdField: BsonObjectId = BsonObjectId("507f1f77bcf86cd799439011")
+    var objectIdField: ObjectId = ObjectId("507f1f77bcf86cd799439011")
     var uuidField: BarqUUID = BarqUUID.from("46423f1b-ce3e-4a7e-812f-004cf9c42d76")
     var binaryField: ByteArray = byteArrayOf(42)
     var mutableBarqIntField: MutableBarqInt = MutableBarqInt.create(42)
@@ -85,7 +85,7 @@ class SerializableSample : BarqObject {
     var nullableDoubleField: Double? = null
     var nullableDecimal128Field: Decimal128? = null
     var nullableTimestampField: BarqInstant? = null
-    var nullableBsonObjectIdField: BsonObjectId? = null
+    var nullableObjectIdField: ObjectId? = null
     var nullableUUIDField: BarqUUID? = null
     var nullableBinaryField: ByteArray? = null
     var nullableMutableBarqIntField: MutableBarqInt? = null
@@ -104,7 +104,7 @@ class SerializableSample : BarqObject {
     var doubleListField: BarqList<Double> = barqListOf()
     var decimal128ListField: BarqList<Decimal128> = barqListOf()
     var timestampListField: BarqList<BarqInstant> = barqListOf()
-    var bsonObjectIdListField: BarqList<BsonObjectId> = barqListOf()
+    var objectIdListField: BarqList<ObjectId> = barqListOf()
     var uuidListField: BarqList<BarqUUID> = barqListOf()
     var binaryListField: BarqList<ByteArray> = barqListOf()
     var objectListField: BarqList<SerializableSample> = barqListOf()
@@ -120,7 +120,7 @@ class SerializableSample : BarqObject {
     var nullableDoubleListField: BarqList<Double?> = barqListOf()
     var nullableDecimal128ListField: BarqList<Decimal128?> = barqListOf()
     var nullableTimestampListField: BarqList<BarqInstant?> = barqListOf()
-    var nullableBsonObjectIdListField: BarqList<BsonObjectId?> = barqListOf()
+    var nullableObjectIdListField: BarqList<ObjectId?> = barqListOf()
     var nullableUUIDListField: BarqList<BarqUUID?> = barqListOf()
     var nullableBinaryListField: BarqList<ByteArray?> = barqListOf()
     var nullableBarqAnyListField: BarqList<BarqAny?> = barqListOf()
@@ -136,7 +136,7 @@ class SerializableSample : BarqObject {
     var doubleSetField: BarqSet<Double> = barqSetOf()
     var decimal128SetField: BarqSet<Decimal128> = barqSetOf()
     var timestampSetField: BarqSet<BarqInstant> = barqSetOf()
-    var bsonObjectIdSetField: BarqSet<BsonObjectId> = barqSetOf()
+    var objectIdSetField: BarqSet<ObjectId> = barqSetOf()
     var uuidSetField: BarqSet<BarqUUID> = barqSetOf()
     var binarySetField: BarqSet<ByteArray> = barqSetOf()
     var objectSetField: BarqSet<SerializableSample> = barqSetOf()
@@ -152,7 +152,7 @@ class SerializableSample : BarqObject {
     var nullableDoubleSetField: BarqSet<Double?> = barqSetOf()
     var nullableDecimal128SetField: BarqSet<Decimal128?> = barqSetOf()
     var nullableTimestampSetField: BarqSet<BarqInstant?> = barqSetOf()
-    var nullableBsonObjectIdSetField: BarqSet<BsonObjectId?> = barqSetOf()
+    var nullableObjectIdSetField: BarqSet<ObjectId?> = barqSetOf()
     var nullableUUIDSetField: BarqSet<BarqUUID?> = barqSetOf()
     var nullableBinarySetField: BarqSet<ByteArray?> = barqSetOf()
     var nullableBarqAnySetField: BarqSet<BarqAny?> = barqSetOf()
@@ -167,7 +167,7 @@ class SerializableSample : BarqObject {
     var floatDictionaryField: BarqDictionary<Float> = barqDictionaryOf()
     var doubleDictionaryField: BarqDictionary<Double> = barqDictionaryOf()
     var timestampDictionaryField: BarqDictionary<BarqInstant> = barqDictionaryOf()
-    var bsonObjectIdDictionaryField: BarqDictionary<BsonObjectId> = barqDictionaryOf()
+    var objectIdDictionaryField: BarqDictionary<ObjectId> = barqDictionaryOf()
     var uuidDictionaryField: BarqDictionary<BarqUUID> = barqDictionaryOf()
     var binaryDictionaryField: BarqDictionary<ByteArray> = barqDictionaryOf()
     var decimal128DictionaryField: BarqDictionary<Decimal128> = barqDictionaryOf()
@@ -182,7 +182,7 @@ class SerializableSample : BarqObject {
     var nullableFloatDictionaryField: BarqDictionary<Float?> = barqDictionaryOf()
     var nullableDoubleDictionaryField: BarqDictionary<Double?> = barqDictionaryOf()
     var nullableTimestampDictionaryField: BarqDictionary<BarqInstant?> = barqDictionaryOf()
-    var nullableBsonObjectIdDictionaryField: BarqDictionary<BsonObjectId?> = barqDictionaryOf()
+    var nullableObjectIdDictionaryField: BarqDictionary<ObjectId?> = barqDictionaryOf()
     var nullableUUIDDictionaryField: BarqDictionary<BarqUUID?> = barqDictionaryOf()
     var nullableBinaryDictionaryField: BarqDictionary<ByteArray?> = barqDictionaryOf()
     var nullableDecimal128DictionaryField: BarqDictionary<Decimal128?> = barqDictionaryOf()
@@ -208,7 +208,7 @@ class SerializableSample : BarqObject {
             Double::class to SerializableSample::doubleListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             Decimal128::class to SerializableSample::decimal128ListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             BarqInstant::class to SerializableSample::timestampListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
-            BsonObjectId::class to SerializableSample::bsonObjectIdListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
+            ObjectId::class to SerializableSample::objectIdListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             BarqUUID::class to SerializableSample::uuidListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             ByteArray::class to SerializableSample::binaryListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             BarqObject::class to SerializableSample::objectListField as KMutableProperty1<SerializableSample, MutableCollection<Any>>
@@ -227,7 +227,7 @@ class SerializableSample : BarqObject {
             Double::class to SerializableSample::nullableDoubleListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             Decimal128::class to SerializableSample::nullableDecimal128ListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             BarqInstant::class to SerializableSample::nullableTimestampListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
-            BsonObjectId::class to SerializableSample::nullableBsonObjectIdListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
+            ObjectId::class to SerializableSample::nullableObjectIdListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             BarqUUID::class to SerializableSample::nullableUUIDListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             ByteArray::class to SerializableSample::nullableBinaryListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             BarqAny::class to SerializableSample::nullableBarqAnyListField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>
@@ -246,7 +246,7 @@ class SerializableSample : BarqObject {
             Double::class to SerializableSample::doubleSetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             Decimal128::class to SerializableSample::decimal128SetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             BarqInstant::class to SerializableSample::timestampSetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
-            BsonObjectId::class to SerializableSample::bsonObjectIdSetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
+            ObjectId::class to SerializableSample::objectIdSetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             BarqUUID::class to SerializableSample::uuidSetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             ByteArray::class to SerializableSample::binarySetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>,
             BarqObject::class to SerializableSample::objectSetField as KMutableProperty1<SerializableSample, MutableCollection<Any>>
@@ -265,7 +265,7 @@ class SerializableSample : BarqObject {
             Double::class to SerializableSample::nullableDoubleSetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             Decimal128::class to SerializableSample::nullableDecimal128SetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             BarqInstant::class to SerializableSample::nullableTimestampSetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
-            BsonObjectId::class to SerializableSample::nullableBsonObjectIdSetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
+            ObjectId::class to SerializableSample::nullableObjectIdSetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             BarqUUID::class to SerializableSample::nullableUUIDSetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             ByteArray::class to SerializableSample::nullableBinarySetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>,
             BarqAny::class to SerializableSample::nullableBarqAnySetField as KMutableProperty1<SerializableSample, MutableCollection<Any?>>
@@ -283,7 +283,7 @@ class SerializableSample : BarqObject {
             Float::class to SerializableSample::floatDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
             Double::class to SerializableSample::doubleDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
             BarqInstant::class to SerializableSample::timestampDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
-            BsonObjectId::class to SerializableSample::bsonObjectIdDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
+            ObjectId::class to SerializableSample::objectIdDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
             BarqUUID::class to SerializableSample::uuidDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
             ByteArray::class to SerializableSample::binaryDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
             Decimal128::class to SerializableSample::decimal128DictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any>>,
@@ -301,7 +301,7 @@ class SerializableSample : BarqObject {
             Float::class to SerializableSample::nullableFloatDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
             Double::class to SerializableSample::nullableDoubleDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
             BarqInstant::class to SerializableSample::nullableTimestampDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
-            BsonObjectId::class to SerializableSample::nullableBsonObjectIdDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
+            ObjectId::class to SerializableSample::nullableObjectIdDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
             BarqUUID::class to SerializableSample::nullableUUIDDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
             ByteArray::class to SerializableSample::nullableBinaryDictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
             Decimal128::class to SerializableSample::nullableDecimal128DictionaryField as KMutableProperty1<SerializableSample, BarqDictionary<Any?>>,
@@ -321,7 +321,7 @@ class SerializableSample : BarqObject {
             Double::class to SerializableSample::doubleField,
             BarqInstant::class to SerializableSample::timestampField,
             MutableBarqInt::class to SerializableSample::mutableBarqIntField,
-            BsonObjectId::class to SerializableSample::bsonObjectIdField,
+            ObjectId::class to SerializableSample::objectIdField,
             BarqUUID::class to SerializableSample::uuidField,
             ByteArray::class to SerializableSample::binaryField,
             Decimal128::class to SerializableSample::decimal128Field,
@@ -339,7 +339,7 @@ class SerializableSample : BarqObject {
             Double::class to SerializableSample::nullableDoubleField,
             BarqInstant::class to SerializableSample::nullableTimestampField,
             MutableBarqInt::class to SerializableSample::nullableMutableBarqIntField,
-            BsonObjectId::class to SerializableSample::nullableBsonObjectIdField,
+            ObjectId::class to SerializableSample::nullableObjectIdField,
             BarqUUID::class to SerializableSample::nullableUUIDField,
             ByteArray::class to SerializableSample::nullableBinaryField,
             Decimal128::class to SerializableSample::nullableDecimal128Field,

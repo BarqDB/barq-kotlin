@@ -53,8 +53,8 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withTimeout
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.random.Random
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KMutableProperty1
@@ -685,7 +685,7 @@ class BarqListTests : EmbeddedObjectCollectionQueryTests {
         Decimal128::class -> if (nullable) NULLABLE_DECIMAL128_VALUES else DECIMAL128_VALUES
         String::class -> if (nullable) NULLABLE_STRING_VALUES else STRING_VALUES
         BarqInstant::class -> if (nullable) NULLABLE_TIMESTAMP_VALUES else TIMESTAMP_VALUES
-        BsonObjectId::class -> if (nullable) NULLABLE_BSON_OBJECT_ID_VALUES else BSON_OBJECT_ID_VALUES
+        ObjectId::class -> if (nullable) NULLABLE_OBJECT_ID_VALUES else OBJECT_ID_VALUES
         BarqUUID::class -> if (nullable) NULLABLE_UUID_VALUES else UUID_VALUES
         ByteArray::class -> if (nullable) NULLABLE_BINARY_VALUES else BINARY_VALUES
         BarqObject::class -> OBJECT_VALUES
@@ -1378,8 +1378,8 @@ internal val DECIMAL128_VALUES = listOf(DECIMAL128_MAX_VALUE, DECIMAL128_MIN_VAL
 internal val BOOLEAN_VALUES = listOf(true, false)
 internal val TIMESTAMP_VALUES =
     listOf(BarqInstant.from(0, 0), BarqInstant.from(42, 420))
-internal val BSON_OBJECT_ID_VALUES =
-    listOf(BsonObjectId(), BsonObjectId("507f191e810c19729de860ea"))
+internal val OBJECT_ID_VALUES =
+    listOf(ObjectId(), ObjectId("507f191e810c19729de860ea"))
 internal val UUID_VALUES =
     listOf(BarqUUID.random(), BarqUUID.from("46423f1b-ce3e-4a7e-812f-004cf9c42d76"))
 
@@ -1425,6 +1425,6 @@ internal val NULLABLE_DOUBLE_VALUES = DOUBLE_VALUES + null
 internal val NULLABLE_DECIMAL128_VALUES = DECIMAL128_VALUES + null
 internal val NULLABLE_BOOLEAN_VALUES = BOOLEAN_VALUES + null
 internal val NULLABLE_TIMESTAMP_VALUES = TIMESTAMP_VALUES + null
-internal val NULLABLE_BSON_OBJECT_ID_VALUES = BSON_OBJECT_ID_VALUES + null
+internal val NULLABLE_OBJECT_ID_VALUES = OBJECT_ID_VALUES + null
 internal val NULLABLE_UUID_VALUES = UUID_VALUES + null
 internal val NULLABLE_BINARY_VALUES = BINARY_VALUES + null

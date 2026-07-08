@@ -16,11 +16,11 @@ package io.github.barqdb.kotlin.entities.sync
 
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 class ObjectIdPk : BarqObject {
     @PrimaryKey
     @Suppress("VariableNaming")
-    var _id: BsonObjectId = BsonObjectId()
+    var _id: ObjectId = ObjectId()
     var name: String = ""
 }

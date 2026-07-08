@@ -31,8 +31,8 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -91,7 +91,7 @@ class ImportTests {
                 Double::class -> assertEquals(1.19840122, managed.doubleField)
                 Decimal128::class -> assertEquals(Decimal128("1.8446744073709551618E-6157"), managed.decimal128Field)
                 BarqInstant::class -> assertEquals(BarqInstant.from(100, 1000), managed.timestampField)
-                BsonObjectId::class -> assertEquals(BsonObjectId("507f1f77bcf86cd799439011"), managed.bsonObjectIdField)
+                ObjectId::class -> assertEquals(ObjectId("507f1f77bcf86cd799439011"), managed.objectIdField)
                 BarqUUID::class -> assertEquals(BarqUUID.from("46423f1b-ce3e-4a7e-812f-004cf9c42d76"), managed.uuidField)
                 BarqObject::class -> assertEquals(null, managed.nullableObject)
                 ByteArray::class -> assertContentEquals(byteArrayOf(42), managed.binaryField)

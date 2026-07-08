@@ -15,7 +15,7 @@
  */
 package io.github.barqdb.kotlin.internal.interop.sync
 
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 public data class ApiKeyWrapper internal constructor(
     public val id: ObjectId,

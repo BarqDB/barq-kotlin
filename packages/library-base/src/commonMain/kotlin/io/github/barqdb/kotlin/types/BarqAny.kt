@@ -20,8 +20,6 @@ import io.github.barqdb.kotlin.dynamic.DynamicBarqObject
 import io.github.barqdb.kotlin.internal.BarqAnyImpl
 import io.github.barqdb.kotlin.query.BarqQuery
 import io.github.barqdb.kotlin.types.BarqAny.Companion.create
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
 import kotlin.reflect.KClass
 
 /**
@@ -219,11 +217,11 @@ public interface BarqAny {
     public fun asDecimal128(): Decimal128
 
     /**
-     * Returns the value from this `BarqAny` as a [BsonObjectId].
+     * Returns the value from this `BarqAny` as an [ObjectId].
      * @throws [IllegalStateException] if the stored value cannot be safely converted to
-     * `BsonObjectId`.
+     * `ObjectId`.
      */
-    public fun asObjectId(): BsonObjectId
+    public fun asObjectId(): ObjectId
 
     /**
      * Returns the value from this `BarqAny` as a [ByteArray].
@@ -333,10 +331,10 @@ public interface BarqAny {
             BarqAnyImpl(Type.DECIMAL128, Decimal128::class, value)
 
         /**
-         * Creates an unmanaged `BarqAny` instance from a [BsonObjectId] value.
+         * Creates an unmanaged `BarqAny` instance from an [ObjectId] value.
          */
-        public fun create(value: BsonObjectId): BarqAny =
-            BarqAnyImpl(Type.OBJECT_ID, BsonObjectId::class, value)
+        public fun create(value: ObjectId): BarqAny =
+            BarqAnyImpl(Type.OBJECT_ID, ObjectId::class, value)
 
         /**
          * Creates an unmanaged `BarqAny` instance from a [ByteArray] value.

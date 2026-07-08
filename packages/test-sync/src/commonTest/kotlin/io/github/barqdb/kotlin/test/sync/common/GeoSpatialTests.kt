@@ -35,7 +35,7 @@ import io.github.barqdb.kotlin.types.geo.GeoBox
 import io.github.barqdb.kotlin.types.geo.GeoCircle
 import io.github.barqdb.kotlin.types.geo.GeoPoint
 import io.github.barqdb.kotlin.types.geo.GeoPolygon
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

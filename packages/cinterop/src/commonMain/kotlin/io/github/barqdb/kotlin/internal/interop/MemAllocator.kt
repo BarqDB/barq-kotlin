@@ -18,7 +18,7 @@
 
 package io.github.barqdb.kotlin.internal.interop
 
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.jvm.JvmName
 
 /**

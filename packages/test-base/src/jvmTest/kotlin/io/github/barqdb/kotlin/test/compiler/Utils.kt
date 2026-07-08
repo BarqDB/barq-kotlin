@@ -54,8 +54,8 @@ import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonDecimal128
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
 
 import java.lang.Exception
 

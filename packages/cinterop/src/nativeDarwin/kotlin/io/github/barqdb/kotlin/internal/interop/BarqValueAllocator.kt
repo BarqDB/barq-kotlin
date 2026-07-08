@@ -28,7 +28,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.set
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
 import platform.posix.memcpy
 import barq_wrapper.barq_query_arg_t
 import barq_wrapper.barq_value_t

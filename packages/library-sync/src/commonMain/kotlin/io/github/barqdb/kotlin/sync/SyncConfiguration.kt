@@ -33,14 +33,14 @@ import io.github.barqdb.kotlin.sync.internal.SyncConfigurationImpl
 import io.github.barqdb.kotlin.sync.internal.UserImpl
 import io.github.barqdb.kotlin.types.BaseBarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonBinary
-import io.github.barqdb.kotlin.bson.BsonBinarySubType
-import io.github.barqdb.kotlin.bson.BsonInt32
-import io.github.barqdb.kotlin.bson.BsonInt64
-import io.github.barqdb.kotlin.bson.BsonNull
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.BsonString
-import io.github.barqdb.kotlin.bson.BsonValue
+import io.github.barqdb.kotlin.types.BarqBinary
+import io.github.barqdb.kotlin.types.BarqBinarySubType
+import io.github.barqdb.kotlin.types.BarqInt32
+import io.github.barqdb.kotlin.types.BarqInt64
+import io.github.barqdb.kotlin.types.BarqNull
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.BarqString
+import io.github.barqdb.kotlin.types.BarqValue
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 
@@ -202,7 +202,7 @@ public interface SyncConfiguration : Configuration {
     public class Builder private constructor(
         private var user: User,
         schema: Set<KClass<out BaseBarqObject>>,
-        private var partitionValue: BsonValue?,
+        private var partitionValue: BarqValue?,
     ) : Configuration.SharedBuilder<SyncConfiguration, Builder>(schema) {
 
         // Shouldn't default to 'default.barq' - Object Store will generate it according to which
@@ -242,9 +242,9 @@ public interface SyncConfiguration : Configuration {
          */
         public constructor(
             user: User,
-            partitionValue: BsonObjectId?,
+            partitionValue: ObjectId?,
             schema: Set<KClass<out BaseBarqObject>>
-        ) : this(user, schema, partitionValue ?: BsonNull)
+        ) : this(user, schema, partitionValue ?: BarqNull)
 
         /**
          * Creates a [SyncConfiguration.Builder] for Partition-Based Sync. Partition-Based Sync
@@ -266,11 +266,11 @@ public interface SyncConfiguration : Configuration {
             user,
             schema,
             partitionValue?.let {
-                BsonBinary(
-                    type = BsonBinarySubType.UUID_STANDARD,
+                BarqBinary(
+                    type = BarqBinarySubType.UUID_STANDARD,
                     data = it.bytes
                 )
-            } ?: BsonNull
+            } ?: BarqNull
         )
 
         /**
@@ -288,7 +288,7 @@ public interface SyncConfiguration : Configuration {
             user: User,
             partitionValue: Int?,
             schema: Set<KClass<out BaseBarqObject>>
-        ) : this(user, schema, partitionValue?.let { BsonInt32(it) } ?: BsonNull)
+        ) : this(user, schema, partitionValue?.let { BarqInt32(it) } ?: BarqNull)
 
         /**
          * Creates a [SyncConfiguration.Builder] for Partition-Based Sync. Partition-Based Sync
@@ -306,7 +306,7 @@ public interface SyncConfiguration : Configuration {
             user: User,
             partitionValue: Long?,
             schema: Set<KClass<out BaseBarqObject>>
-        ) : this(user, schema, partitionValue?.let { BsonInt64(it) } ?: BsonNull)
+        ) : this(user, schema, partitionValue?.let { BarqInt64(it) } ?: BarqNull)
 
         /**
          * Creates a [SyncConfiguration.Builder] for Partition-Based Sync. Partition-Based Sync
@@ -324,7 +324,7 @@ public interface SyncConfiguration : Configuration {
             user: User,
             partitionValue: String?,
             schema: Set<KClass<out BaseBarqObject>>
-        ) : this(user, schema, partitionValue?.let { BsonString(it) } ?: BsonNull)
+        ) : this(user, schema, partitionValue?.let { BarqString(it) } ?: BarqNull)
 
         init {
             if (user.state != User.State.LOGGED_IN) {
@@ -618,7 +618,7 @@ public interface SyncConfiguration : Configuration {
          * @param schema the classes of the schema. The elements of the set must be direct class literals.
          * @throws IllegalArgumentException if the user is not valid and logged in.
          */
-        public fun create(user: User, partitionValue: BsonObjectId?, schema: Set<KClass<out BaseBarqObject>>): SyncConfiguration =
+        public fun create(user: User, partitionValue: ObjectId?, schema: Set<KClass<out BaseBarqObject>>): SyncConfiguration =
             Builder(user, partitionValue, schema).build()
 
         /**

@@ -34,8 +34,8 @@ import io.github.barqdb.kotlin.types.annotations.Ignore
 import io.github.barqdb.kotlin.types.annotations.Index
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
 import io.github.barqdb.kotlin.types.annotations.PersistedName
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import java.util.*
 
 class Sample : BarqObject {
@@ -67,7 +67,7 @@ class Sample : BarqObject {
     var doubleField: Double? = 1.19840122
     var decimal128Field: Decimal128? = Decimal128("1.8446744073709551618E-6157")
     var timestampField: BarqInstant? = BarqInstant.from(0, 0)
-    var bsonObjectIdField: BsonObjectId? = BsonObjectId()
+    var objectIdField: ObjectId? = ObjectId()
     var uuidField: BarqUUID? = BarqUUID.random()
     var byteArrayField: ByteArray? = null
     var mutableBarqInt: MutableBarqInt? = MutableBarqInt.create(42)
@@ -86,7 +86,7 @@ class Sample : BarqObject {
     var floatListField: BarqList<Float> = barqListOf()
     var doubleListField: BarqList<Double> = barqListOf()
     var timestampListField: BarqList<BarqInstant> = barqListOf()
-    var bsonObjectIdListField: BarqList<BsonObjectId> = barqListOf()
+    var objectIdListField: BarqList<ObjectId> = barqListOf()
     var uuidListField: BarqList<BarqUUID> = barqListOf()
     var binaryListField: BarqList<ByteArray> = barqListOf()
     var decimal128ListField: BarqList<Decimal128> = barqListOf()
@@ -104,7 +104,7 @@ class Sample : BarqObject {
     var nullableFloatListField: BarqList<Float?> = barqListOf()
     var nullableDoubleListField: BarqList<Double?> = barqListOf()
     var nullableTimestampListField: BarqList<BarqInstant?> = barqListOf()
-    var nullableBsonObjectIdListField: BarqList<BsonObjectId?> = barqListOf()
+    var nullableObjectIdListField: BarqList<ObjectId?> = barqListOf()
     var nullableUUIDListField: BarqList<BarqUUID?> = barqListOf()
     var nullableBinaryListField: BarqList<ByteArray?> = barqListOf()
     var nullableDecimal128ListField: BarqList<Decimal128?> = barqListOf()
@@ -121,7 +121,7 @@ class Sample : BarqObject {
     var floatSetField: BarqSet<Float> = barqSetOf()
     var doubleSetField: BarqSet<Double> = barqSetOf()
     var timestampSetField: BarqSet<BarqInstant> = barqSetOf()
-    var bsonObjectIdSetField: BarqSet<BsonObjectId> = barqSetOf()
+    var objectIdSetField: BarqSet<ObjectId> = barqSetOf()
     var uuidSetField: BarqSet<BarqUUID> = barqSetOf()
     var binarySetField: BarqSet<ByteArray> = barqSetOf()
     var decimal128SetField: BarqSet<Decimal128> = barqSetOf()
@@ -138,7 +138,7 @@ class Sample : BarqObject {
     var nullableFloatSetField: BarqSet<Float?> = barqSetOf()
     var nullableDoubleSetField: BarqSet<Double?> = barqSetOf()
     var nullableTimestampSetField: BarqSet<BarqInstant?> = barqSetOf()
-    var nullableBsonObjectIdSetField: BarqSet<BsonObjectId?> = barqSetOf()
+    var nullableObjectIdSetField: BarqSet<ObjectId?> = barqSetOf()
     var nullableUUIDSetField: BarqSet<BarqUUID?> = barqSetOf()
     var nullableBinarySetField: BarqSet<ByteArray?> = barqSetOf()
     var nullableDecimal128SetField: BarqSet<Decimal128?> = barqSetOf()
@@ -156,7 +156,7 @@ class Sample : BarqObject {
     var floatDictionaryField: BarqDictionary<Float> = barqDictionaryOf()
     var doubleDictionaryField: BarqDictionary<Double> = barqDictionaryOf()
     var timestampDictionaryField: BarqDictionary<BarqInstant> = barqDictionaryOf()
-    var bsonObjectIdDictionaryField: BarqDictionary<BsonObjectId> = barqDictionaryOf()
+    var objectIdDictionaryField: BarqDictionary<ObjectId> = barqDictionaryOf()
     var uuidDictionaryField: BarqDictionary<BarqUUID> = barqDictionaryOf()
     var binaryDictionaryField: BarqDictionary<ByteArray> = barqDictionaryOf()
     var decimal128DictionaryField: BarqDictionary<Decimal128> = barqDictionaryOf()
@@ -172,7 +172,7 @@ class Sample : BarqObject {
     var nullableFloatDictionaryField: BarqDictionary<Float?> = barqDictionaryOf()
     var nullableDoubleDictionaryField: BarqDictionary<Double?> = barqDictionaryOf()
     var nullableTimestampDictionaryField: BarqDictionary<BarqInstant?> = barqDictionaryOf()
-    var nullableBsonObjectIdDictionaryField: BarqDictionary<BsonObjectId?> = barqDictionaryOf()
+    var nullableObjectIdDictionaryField: BarqDictionary<ObjectId?> = barqDictionaryOf()
     var nullableUUIDDictionaryField: BarqDictionary<BarqUUID?> = barqDictionaryOf()
     var nullableBinaryDictionaryField: BarqDictionary<ByteArray?> = barqDictionaryOf()
     var nullableDecimal128DictionaryField: BarqDictionary<Decimal128?> = barqDictionaryOf()

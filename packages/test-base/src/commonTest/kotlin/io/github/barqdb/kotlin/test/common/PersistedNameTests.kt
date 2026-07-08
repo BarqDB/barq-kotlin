@@ -41,7 +41,7 @@ import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.annotations.PersistedName
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.reflect.KMutableProperty1
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -52,7 +52,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-private val bsonObjectId = BsonObjectId("507f191e810c19729de860ea")
+private val objectId = ObjectId("507f191e810c19729de860ea")
 
 class PersistedNameTests {
 
@@ -142,9 +142,9 @@ class PersistedNameTests {
         )
 
         assertCanQuerySingle(
-            property = PersistedNameSample::publicNameBsonObjectIdField,
-            nameToQueryBy = "persistedNameBsonObjectIdField",
-            value = bsonObjectId
+            property = PersistedNameSample::publicNameObjectIdField,
+            nameToQueryBy = "persistedNameObjectIdField",
+            value = objectId
         )
     }
 
@@ -161,9 +161,9 @@ class PersistedNameTests {
         )
 
         assertCanQuerySingle(
-            property = PersistedNameSample::publicNameBsonObjectIdField,
-            nameToQueryBy = "publicNameBsonObjectIdField",
-            value = bsonObjectId
+            property = PersistedNameSample::publicNameObjectIdField,
+            nameToQueryBy = "publicNameObjectIdField",
+            value = objectId
         )
     }
 
@@ -176,7 +176,7 @@ class PersistedNameTests {
         assertCanQuerySingle(
             property = PersistedNameSample::publicNamePrimaryKey,
             nameToQueryBy = "persistedNamePrimaryKey",
-            value = bsonObjectId
+            value = objectId
         )
     }
 
@@ -189,7 +189,7 @@ class PersistedNameTests {
         assertCanQuerySingle(
             property = PersistedNameSample::publicNamePrimaryKey,
             nameToQueryBy = "publicNamePrimaryKey",
-            value = bsonObjectId
+            value = objectId
         )
     }
 
@@ -480,7 +480,7 @@ class PersistedNameSample : BarqObject {
 
     @PersistedName("persistedNamePrimaryKey")
     @PrimaryKey
-    var publicNamePrimaryKey: BsonObjectId = bsonObjectId
+    var publicNamePrimaryKey: ObjectId = objectId
 
     @PersistedName("persistedNameStringField")
     var publicNameStringField: String = "Barq"
@@ -488,8 +488,8 @@ class PersistedNameSample : BarqObject {
     @PersistedName("persistedNameTimestampField")
     var publicNameTimestampField: BarqInstant = BarqInstant.from(100, 1000)
 
-    @PersistedName("persistedNameBsonObjectIdField")
-    var publicNameBsonObjectIdField: BsonObjectId = bsonObjectId
+    @PersistedName("persistedNameObjectIdField")
+    var publicNameObjectIdField: ObjectId = objectId
 
     @PersistedName("persistedNameUuidField")
     var publicNameUuidField: BarqUUID = BarqUUID.from("46423f1b-ce3e-4a7e-812f-004cf9c42d76")

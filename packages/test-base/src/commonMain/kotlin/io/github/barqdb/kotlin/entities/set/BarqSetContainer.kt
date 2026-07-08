@@ -22,8 +22,8 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KMutableProperty1
 
 class BarqSetContainer : BarqObject {
@@ -42,7 +42,7 @@ class BarqSetContainer : BarqObject {
     var doubleSetField: BarqSet<Double> = barqSetOf()
     var decimal128SetField: BarqSet<Decimal128> = barqSetOf()
     var timestampSetField: BarqSet<BarqInstant> = barqSetOf()
-    var bsonObjectIdSetField: BarqSet<BsonObjectId> = barqSetOf()
+    var objectIdSetField: BarqSet<ObjectId> = barqSetOf()
     var uuidSetField: BarqSet<BarqUUID> = barqSetOf()
     var binarySetField: BarqSet<ByteArray> = barqSetOf()
     var objectSetField: BarqSet<BarqSetContainer> = barqSetOf()
@@ -58,7 +58,7 @@ class BarqSetContainer : BarqObject {
     var nullableDoubleSetField: BarqSet<Double?> = barqSetOf()
     var nullableDecimal128SetField: BarqSet<Decimal128?> = barqSetOf()
     var nullableTimestampSetField: BarqSet<BarqInstant?> = barqSetOf()
-    var nullableBsonObjectIdSetField: BarqSet<BsonObjectId?> = barqSetOf()
+    var nullableObjectIdSetField: BarqSet<ObjectId?> = barqSetOf()
     var nullableUUIDSetField: BarqSet<BarqUUID?> = barqSetOf()
     var nullableBinarySetField: BarqSet<ByteArray?> = barqSetOf()
     var nullableBarqAnySetField: BarqSet<BarqAny?> = barqSetOf()
@@ -77,7 +77,7 @@ class BarqSetContainer : BarqObject {
             Double::class to BarqSetContainer::doubleSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
             Decimal128::class to BarqSetContainer::decimal128SetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
             BarqInstant::class to BarqSetContainer::timestampSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
-            BsonObjectId::class to BarqSetContainer::bsonObjectIdSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
+            ObjectId::class to BarqSetContainer::objectIdSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
             BarqUUID::class to BarqSetContainer::uuidSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
             ByteArray::class to BarqSetContainer::binarySetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>,
             BarqObject::class to BarqSetContainer::objectSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any>>
@@ -96,7 +96,7 @@ class BarqSetContainer : BarqObject {
             Double::class to BarqSetContainer::nullableDoubleSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
             Decimal128::class to BarqSetContainer::nullableDecimal128SetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
             BarqInstant::class to BarqSetContainer::nullableTimestampSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
-            BsonObjectId::class to BarqSetContainer::nullableBsonObjectIdSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
+            ObjectId::class to BarqSetContainer::nullableObjectIdSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
             BarqUUID::class to BarqSetContainer::nullableUUIDSetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
             ByteArray::class to BarqSetContainer::nullableBinarySetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>,
             BarqAny::class to BarqSetContainer::nullableBarqAnySetField as KMutableProperty1<BarqSetContainer, BarqSet<Any?>>

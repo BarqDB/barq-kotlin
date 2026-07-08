@@ -21,8 +21,7 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
 import kotlinx.serialization.Serializable
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.random.Random
 
 @Serializable
@@ -40,7 +39,7 @@ class CollectionDataType(var name: String = "Default", @PrimaryKey var _id: Int 
 class ParentCollectionDataType : BarqObject {
     @PrimaryKey
     @Suppress("VariableNaming")
-    var _id: ObjectId = BsonObjectId()
+    var _id: ObjectId = ObjectId()
     var name: String = "PARENT-DEFAULT"
     var child: ChildCollectionDataType? = null
     var embeddedChild: EmbeddedChildCollectionDataType? = null
@@ -50,13 +49,13 @@ class ParentCollectionDataType : BarqObject {
 class ChildCollectionDataType : BarqObject {
     @PrimaryKey
     @Suppress("VariableNaming")
-    var _id: ObjectId = BsonObjectId()
+    var _id: ObjectId = ObjectId()
     var name: String = "CHILD-DEFAULT"
 }
 
 class EmbeddedChildCollectionDataType : EmbeddedBarqObject {
     @Suppress("VariableNaming")
-    var _id: ObjectId = BsonObjectId()
+    var _id: ObjectId = ObjectId()
     var name: String = "EMBEDDEDCHILD-DEFAULT"
 }
 

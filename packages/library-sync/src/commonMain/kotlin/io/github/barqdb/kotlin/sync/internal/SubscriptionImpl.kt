@@ -26,7 +26,7 @@ import io.github.barqdb.kotlin.sync.Subscription
 import io.github.barqdb.kotlin.query.BarqQuery
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.reflect.KClass
 
 internal class SubscriptionImpl(

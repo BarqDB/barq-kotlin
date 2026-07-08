@@ -30,7 +30,7 @@ import io.github.barqdb.kotlin.internal.platform.runBlocking
 import io.github.barqdb.kotlin.test.common.utils.assertFailsWithMessage
 import io.github.barqdb.kotlin.test.platform.PlatformUtils
 import io.github.barqdb.kotlin.types.BarqAny
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

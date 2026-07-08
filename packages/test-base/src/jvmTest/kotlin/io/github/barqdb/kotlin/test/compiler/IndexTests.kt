@@ -29,8 +29,8 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqUUID
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClassifier
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -48,10 +48,10 @@ class IndexTests {
             Long::class to "1",
             Float::class to "1.4f",
             Double::class to "1.4",
-            Decimal128::class to "BsonDecimal128(\"1.4E100\")",
+            Decimal128::class to "Decimal128(\"1.4E100\")",
             String::class to "\"Barq\"",
             BarqInstant::class to "BarqInstant.from(42, 420)",
-            BsonObjectId::class to "BsonObjectId()",
+            ObjectId::class to "ObjectId()",
             BarqUUID::class to "BarqUUID.random()",
             ByteArray::class to "byteArrayOf(42)",
             MutableBarqInt::class to "MutableBarqInt.create(42)",
@@ -81,8 +81,8 @@ class IndexTests {
                         import io.github.barqdb.kotlin.types.BarqUUID
                         import io.github.barqdb.kotlin.types.annotations.Index
                         import io.github.barqdb.kotlin.BarqConfiguration
-                        import io.github.barqdb.kotlin.bson.BsonObjectId
-                        import io.github.barqdb.kotlin.bson.BsonDecimal128
+                        import io.github.barqdb.kotlin.types.ObjectId
+                        import io.github.barqdb.kotlin.types.Decimal128
 
                         class A : BarqObject {
                             @Index

@@ -21,8 +21,8 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 
 class Nullability : BarqObject {
     var stringNullable: String? = null
@@ -39,7 +39,7 @@ class Nullability : BarqObject {
     var doubleField: Double? = null
     var decimal128Field: Decimal128? = null
     var timestampField: BarqInstant? = null
-    var bsonObjectIdField: BsonObjectId? = null
+    var objectIdField: ObjectId? = null
     var uuidField: BarqUUID? = null
     var binaryField: ByteArray? = null
     var mutableBarqIntField: MutableBarqInt? = null

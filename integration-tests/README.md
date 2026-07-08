@@ -7,6 +7,5 @@ This folder holds the various integration test projects.
   - `single-platform` - Android single module project
   - `multi-platform` - Kotlin Multiplatform project with JVM and Native targets running on the host
      platform.
-  There are various project with specific Gradle versions that has been proven troublesome with
-  regards to collecting analytics data and a `current` project that will use the versions used to 
-  build the SDK.
+  There are various projects with specific Gradle versions that have been troublesome for plugin
+  compatibility and a `current` project that will use the versions used to build the SDK.

@@ -23,7 +23,7 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 // This class is included to make sure the compiler-plugin can handle various type, given the min/max
 // version of Kotlin this project is compiled against.

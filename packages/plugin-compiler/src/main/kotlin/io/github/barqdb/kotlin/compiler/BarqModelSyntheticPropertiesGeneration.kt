@@ -23,7 +23,7 @@ import io.github.barqdb.kotlin.compiler.ClassIds.CLASS_KIND_TYPE
 import io.github.barqdb.kotlin.compiler.ClassIds.COLLECTION_TYPE
 import io.github.barqdb.kotlin.compiler.ClassIds.FULLTEXT_ANNOTATION
 import io.github.barqdb.kotlin.compiler.ClassIds.INDEX_ANNOTATION
-import io.github.barqdb.kotlin.compiler.ClassIds.BSON_OBJECT_ID
+import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_OBJECT_ID
 import io.github.barqdb.kotlin.compiler.ClassIds.KOTLIN_COLLECTIONS_MAP
 import io.github.barqdb.kotlin.compiler.ClassIds.KOTLIN_COLLECTIONS_MAPOF
 import io.github.barqdb.kotlin.compiler.ClassIds.KOTLIN_PAIR
@@ -151,7 +151,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
 
     private val objectReferenceClass = pluginContext.lookupClassOrThrow(OBJECT_REFERENCE_CLASS)
     private val barqInstantType: IrType = pluginContext.lookupClassOrThrow(BARQ_INSTANT).defaultType
-    private val objectIdType: IrType = pluginContext.lookupClassOrThrow(BSON_OBJECT_ID).defaultType
+    private val objectIdType: IrType = pluginContext.lookupClassOrThrow(BARQ_OBJECT_ID).defaultType
     private val barqUUIDType: IrType = pluginContext.lookupClassOrThrow(BARQ_UUID).defaultType
     private val barqAnyType: IrType = pluginContext.lookupClassOrThrow(BARQ_ANY).defaultType
 

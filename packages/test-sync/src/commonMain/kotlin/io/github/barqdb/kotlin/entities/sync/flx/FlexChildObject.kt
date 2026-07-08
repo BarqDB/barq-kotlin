@@ -18,7 +18,7 @@ package io.github.barqdb.kotlin.entities.sync.flx
 
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 /**
  * Object used when testing Flexible Sync.
@@ -26,7 +26,7 @@ import io.github.barqdb.kotlin.bson.BsonObjectId
 class FlexChildObject : BarqObject {
     @PrimaryKey
     @Suppress("VariableNaming")
-    var _id: BsonObjectId = BsonObjectId()
+    var _id: ObjectId = ObjectId()
     var section: Int = 0
     var name: String = ""
 }

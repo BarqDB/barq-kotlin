@@ -6,8 +6,8 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.Decimal128
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
 
 /**
  * Creates an unmanaged `BarqAny` instance from a [BaseBarqObject] value.

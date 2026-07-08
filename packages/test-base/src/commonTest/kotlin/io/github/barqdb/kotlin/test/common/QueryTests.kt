@@ -64,9 +64,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import io.github.barqdb.kotlin.bson.BsonDecimal128
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KMutableProperty1
@@ -146,7 +145,7 @@ class QueryTests {
                     doubleField = 1.0
                     decimal128Field = Decimal128("2.8446744073709551618E-6151")
                     timestampField = BarqInstant.from(100, 1001)
-                    bsonObjectIdField = BsonObjectId("507f191e810c19729de860eb")
+                    objectIdField = ObjectId("507f191e810c19729de860eb")
                     uuidField = BarqUUID.from("46423f1b-ce3e-4a7e-812f-004cf9c42d77")
                     binaryField = byteArrayOf(43)
                     barqAnyField = BarqAny.create(43)
@@ -202,10 +201,10 @@ class QueryTests {
                     checkQuery(QuerySample::timestampField, BarqInstant.from(100, 1001))
                 }
                 BarqStorageType.OBJECT_ID -> {
-                    val bsonObjectId = BsonObjectId("507f191e810c19729de860eb")
+                    val objectId = ObjectId("507f191e810c19729de860eb")
 
                     // Check matching types first
-                    checkQuery(QuerySample::bsonObjectIdField, bsonObjectId)
+                    checkQuery(QuerySample::objectIdField, objectId)
                 }
                 BarqStorageType.UUID -> {
                     checkQuery(
@@ -1138,7 +1137,7 @@ class QueryTests {
                 Long::class,
                 Float::class,
                 Double::class,
-                BsonDecimal128::class
+                Decimal128::class
             ),
             TypeDescriptor.classifiers.filter { (_, coreFieldType) ->
                 coreFieldType.aggregatorSupport.contains(
@@ -1412,7 +1411,7 @@ class QueryTests {
                 Long::class,
                 Float::class,
                 Double::class,
-                BsonDecimal128::class,
+                Decimal128::class,
                 BarqInstant::class,
             ),
             TypeDescriptor.classifiers.filter { (_, coreFieldType) ->
@@ -1612,7 +1611,7 @@ class QueryTests {
                 Long::class,
                 Float::class,
                 Double::class,
-                BsonDecimal128::class,
+                Decimal128::class,
                 BarqInstant::class,
             ),
             TypeDescriptor.classifiers.filter { (_, coreFieldType) ->
@@ -2040,11 +2039,11 @@ class QueryTests {
             .forEach { aggregator ->
                 listOf(
                     QuerySample::booleanListField.name,
-                    QuerySample::bsonObjectIdListField.name,
+                    QuerySample::objectIdListField.name,
                     QuerySample::timestampListField.name,
                     QuerySample::binaryListField.name,
                     QuerySample::nullableBooleanListField.name,
-                    QuerySample::nullableBsonObjectIdListField.name,
+                    QuerySample::nullableObjectIdListField.name,
                     QuerySample::nullableTimestampListField.name,
                     QuerySample::nullableBinaryListField.name,
                 ).forEach { field ->
@@ -2105,11 +2104,11 @@ class QueryTests {
             .forEach { aggregator ->
                 listOf(
                     QuerySample::booleanSetField.name,
-                    QuerySample::bsonObjectIdSetField.name,
+                    QuerySample::objectIdSetField.name,
                     QuerySample::timestampSetField.name,
                     QuerySample::binaryListField.name,
                     QuerySample::nullableBooleanSetField.name,
-                    QuerySample::nullableBsonObjectIdSetField.name,
+                    QuerySample::nullableObjectIdSetField.name,
                     QuerySample::nullableTimestampSetField.name,
                     QuerySample::nullableBinaryListField.name,
                 ).forEach { field ->
@@ -2170,11 +2169,11 @@ class QueryTests {
             .forEach { aggregator ->
                 listOf(
                     QuerySample::booleanDictionaryField.name,
-                    QuerySample::bsonObjectIdDictionaryField.name,
+                    QuerySample::objectIdDictionaryField.name,
                     QuerySample::timestampDictionaryField.name,
                     QuerySample::binaryListField.name,
                     QuerySample::nullableBooleanDictionaryField.name,
-                    QuerySample::nullableBsonObjectIdDictionaryField.name,
+                    QuerySample::nullableObjectIdDictionaryField.name,
                     QuerySample::nullableTimestampDictionaryField.name,
                     QuerySample::nullableBinaryListField.name,
                 ).forEach { field ->
@@ -3308,7 +3307,7 @@ class QuerySample() : BarqObject {
     var doubleField: Double = 0.0
     var decimal128Field: Decimal128 = Decimal128("1.84467440737095E-6157")
     var timestampField: BarqInstant = BarqInstant.from(100, 1000)
-    var bsonObjectIdField: BsonObjectId = BsonObjectId("507f191e810c19729de860ea")
+    var objectIdField: ObjectId = ObjectId("507f191e810c19729de860ea")
     var uuidField: BarqUUID = BarqUUID.from("46423f1b-ce3e-4a7e-812f-004cf9c42d76")
     var binaryField: ByteArray = byteArrayOf(42)
     var barqAnyField: BarqAny? = BarqAny.create("Hello")
@@ -3324,7 +3323,7 @@ class QuerySample() : BarqObject {
     var nullableDoubleField: Double? = null
     var nullableDecimal128Field: Decimal128? = null
     var nullableTimestampField: BarqInstant? = null
-    var nullableBsonObjectIdField: BsonObjectId? = null
+    var nullableObjectIdField: ObjectId? = null
     var nullableBinaryField: ByteArray? = null
     var nullableBarqObject: QuerySample? = null
 
@@ -3339,7 +3338,7 @@ class QuerySample() : BarqObject {
     var doubleListField: BarqList<Double> = barqListOf()
     var decimal128ListField: BarqList<Decimal128> = barqListOf()
     var timestampListField: BarqList<BarqInstant> = barqListOf()
-    var bsonObjectIdListField: BarqList<BsonObjectId> = barqListOf()
+    var objectIdListField: BarqList<ObjectId> = barqListOf()
     var binaryListField: BarqList<ByteArray> = barqListOf()
     var objectListField: BarqList<QuerySample> = barqListOf()
 
@@ -3354,7 +3353,7 @@ class QuerySample() : BarqObject {
     var nullableDoubleListField: BarqList<Double?> = barqListOf()
     var nullableDecimal128ListField: BarqList<Decimal128?> = barqListOf()
     var nullableTimestampListField: BarqList<BarqInstant?> = barqListOf()
-    var nullableBsonObjectIdListField: BarqList<BsonObjectId?> = barqListOf()
+    var nullableObjectIdListField: BarqList<ObjectId?> = barqListOf()
     var nullableBinaryListField: BarqList<ByteArray?> = barqListOf()
 
     var stringSetField: BarqSet<String> = barqSetOf()
@@ -3368,7 +3367,7 @@ class QuerySample() : BarqObject {
     var doubleSetField: BarqSet<Double> = barqSetOf()
     var decimal128SetField: BarqSet<Decimal128> = barqSetOf()
     var timestampSetField: BarqSet<BarqInstant> = barqSetOf()
-    var bsonObjectIdSetField: BarqSet<BsonObjectId> = barqSetOf()
+    var objectIdSetField: BarqSet<ObjectId> = barqSetOf()
     var binarySetField: BarqSet<ByteArray> = barqSetOf()
     var objectSetField: BarqSet<QuerySample> = barqSetOf()
 
@@ -3383,7 +3382,7 @@ class QuerySample() : BarqObject {
     var nullableDoubleSetField: BarqSet<Double?> = barqSetOf()
     var nullableDecimal128SetField: BarqSet<Decimal128?> = barqSetOf()
     var nullableTimestampSetField: BarqSet<BarqInstant?> = barqSetOf()
-    var nullableBsonObjectIdSetField: BarqSet<BsonObjectId?> = barqSetOf()
+    var nullableObjectIdSetField: BarqSet<ObjectId?> = barqSetOf()
     var nullableBinarySetField: BarqSet<ByteArray?> = barqSetOf()
 
     var stringDictionaryField: BarqDictionary<String> = barqDictionaryOf()
@@ -3397,7 +3396,7 @@ class QuerySample() : BarqObject {
     var doubleDictionaryField: BarqDictionary<Double> = barqDictionaryOf()
     var decimal128DictionaryField: BarqDictionary<Decimal128> = barqDictionaryOf()
     var timestampDictionaryField: BarqDictionary<BarqInstant> = barqDictionaryOf()
-    var bsonObjectIdDictionaryField: BarqDictionary<BsonObjectId> = barqDictionaryOf()
+    var objectIdDictionaryField: BarqDictionary<ObjectId> = barqDictionaryOf()
     var binaryDictionaryField: BarqDictionary<ByteArray> = barqDictionaryOf()
 
     var nullableStringDictionaryField: BarqDictionary<String?> = barqDictionaryOf()
@@ -3411,7 +3410,7 @@ class QuerySample() : BarqObject {
     var nullableDoubleDictionaryField: BarqDictionary<Double?> = barqDictionaryOf()
     var nullableDecimal128DictionaryField: BarqDictionary<Decimal128?> = barqDictionaryOf()
     var nullableTimestampDictionaryField: BarqDictionary<BarqInstant?> = barqDictionaryOf()
-    var nullableBsonObjectIdDictionaryField: BarqDictionary<BsonObjectId?> = barqDictionaryOf()
+    var nullableObjectIdDictionaryField: BarqDictionary<ObjectId?> = barqDictionaryOf()
     var nullableBinaryDictionaryField: BarqDictionary<ByteArray?> = barqDictionaryOf()
     var nullableObjectDictionaryField: BarqDictionary<QuerySample?> = barqDictionaryOf()
 

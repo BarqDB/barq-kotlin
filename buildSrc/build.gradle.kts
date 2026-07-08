@@ -51,7 +51,6 @@ buildscript {
 // These seem to propagate to all projects including the buildSrc/ directory, which also means
 // they are not allowed to set the version. It can only be set from here.
 dependencies {
-    implementation("io.github.gradle-nexus:publish-plugin:${Versions.nexusPublishPlugin}")
     implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${Versions.detektPlugin}")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
     implementation("com.android.tools:r8:${Versions.Android.r8}")

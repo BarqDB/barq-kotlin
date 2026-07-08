@@ -6,7 +6,7 @@ import io.github.barqdb.kotlin.entities.Sample
 import io.github.barqdb.kotlin.ext.query
 import io.github.barqdb.kotlin.test.platform.PlatformUtils
 import kotlinx.coroutines.runBlocking
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

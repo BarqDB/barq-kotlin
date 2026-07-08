@@ -315,7 +315,7 @@ class SerializationTests {
                         nullableBarqAnyField = BarqAny.create(timestampField)
                     }
                     BarqAny.Type.OBJECT_ID -> SerializableSample().apply {
-                        nullableBarqAnyField = BarqAny.create(bsonObjectIdField)
+                        nullableBarqAnyField = BarqAny.create(objectIdField)
                     }
                     BarqAny.Type.UUID -> SerializableSample().apply {
                         nullableBarqAnyField = BarqAny.create(uuidField)

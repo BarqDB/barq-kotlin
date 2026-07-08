@@ -67,7 +67,7 @@ class FLXProgressListenerTests {
     @BeforeTest
     fun setup() {
         app = TestApp(this::class.simpleName, DefaultFlexibleSyncAppInitializer)
-        partitionValue = io.github.barqdb.kotlin.bson.ObjectId().toString()
+        partitionValue = io.github.barqdb.kotlin.types.ObjectId().toString()
     }
 
     @AfterTest

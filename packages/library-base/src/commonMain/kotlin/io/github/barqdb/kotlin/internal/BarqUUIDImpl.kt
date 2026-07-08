@@ -21,8 +21,8 @@ import io.github.barqdb.kotlin.internal.util.HEX_PATTERN
 import io.github.barqdb.kotlin.internal.util.parseHex
 import io.github.barqdb.kotlin.internal.util.toHexString
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonBinary
-import io.github.barqdb.kotlin.bson.BsonBinarySubType
+import io.github.barqdb.kotlin.types.BarqBinary
+import io.github.barqdb.kotlin.types.BarqBinarySubType
 import kotlin.experimental.and
 import kotlin.experimental.or
 
@@ -104,7 +104,7 @@ public class BarqUUIDImpl : BarqUUID {
     }
 }
 @Suppress("NOTHING_TO_INLINE")
-public inline fun BarqUUID.asBsonBinary(): BsonBinary = BsonBinary(BsonBinarySubType.UUID_STANDARD, bytes)
+public inline fun BarqUUID.asBarqBinary(): BarqBinary = BarqBinary(BarqBinarySubType.UUID_STANDARD, bytes)
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun BsonBinary.asBarqUUID(): BarqUUID = BarqUUID.from(data)
+public inline fun BarqBinary.asBarqUUID(): BarqUUID = BarqUUID.from(data)

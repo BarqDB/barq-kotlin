@@ -46,12 +46,10 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
+import io.github.barqdb.kotlin.types.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
 import io.github.barqdb.kotlin.types.annotations.Index
 import kotlinx.coroutines.async
-import io.github.barqdb.kotlin.bson.BsonDecimal128
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
-import io.github.barqdb.kotlin.bson.ObjectId
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.test.AfterTest
@@ -244,8 +242,8 @@ class BarqAnyTests {
                     assertEquals(BarqAny.create(Decimal128("1.5")), barqAny)
                     assertEquals(BarqAny.Type.DECIMAL128, barqAny.type)
                 }
-                BsonObjectId::class -> {
-                    val objectId = BsonObjectId("000000000000000000000000")
+                ObjectId::class -> {
+                    val objectId = ObjectId("000000000000000000000000")
                     val barqAny = BarqAny.create(objectId)
                     assertEquals(objectId, barqAny.asObjectId())
                     assertEquals(BarqAny.create(objectId), barqAny)
@@ -707,7 +705,7 @@ class BarqAnyTests {
                         assertFailsWith<IllegalStateException> { value.asDouble() }
                     Decimal128::class ->
                         assertFailsWith<IllegalStateException> { value.asDecimal128() }
-                    BsonObjectId::class ->
+                    ObjectId::class ->
                         assertFailsWith<IllegalStateException> { value.asObjectId() }
                     ByteArray::class ->
                         assertFailsWith<IllegalStateException> { value.asByteArray() }
@@ -736,7 +734,7 @@ class BarqAnyTests {
                 Float::class -> 17F
                 Double::class -> 18.0
                 Decimal128::class -> Decimal128("1")
-                ObjectId::class -> BsonObjectId()
+                ObjectId::class -> ObjectId()
                 ByteArray::class -> byteArrayOf(42, 43, 44)
                 BarqInstant::class -> BarqInstant.now()
                 BarqUUID::class -> BarqUUID.random()
@@ -758,8 +756,8 @@ class BarqAnyTests {
             is String -> BarqAny.create(value)
             is Float -> BarqAny.create(value)
             is Double -> BarqAny.create(value)
-            is BsonDecimal128 -> BarqAny.create(value)
-            is BsonObjectId -> BarqAny.create(value)
+            is Decimal128 -> BarqAny.create(value)
+            is ObjectId -> BarqAny.create(value)
             is ByteArray -> BarqAny.create(value)
             is BarqInstant -> BarqAny.create(value)
             is BarqUUID -> BarqAny.create(value)

@@ -20,7 +20,7 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PersistedName
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 class JsonStyleBarqObject : BarqObject {
     // Act as partition key to separate individual test runs

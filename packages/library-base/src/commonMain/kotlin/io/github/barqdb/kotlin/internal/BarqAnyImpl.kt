@@ -23,8 +23,8 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
@@ -79,7 +79,7 @@ internal class BarqAnyImpl<T : Any> constructor(
 
     override fun asDecimal128(): Decimal128 = getValue(BarqAny.Type.DECIMAL128) as Decimal128
 
-    override fun asObjectId(): BsonObjectId = getValue(BarqAny.Type.OBJECT_ID) as BsonObjectId
+    override fun asObjectId(): ObjectId = getValue(BarqAny.Type.OBJECT_ID) as ObjectId
 
     override fun asByteArray(): ByteArray = getValue(BarqAny.Type.BINARY) as ByteArray
 

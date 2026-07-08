@@ -32,7 +32,7 @@ import io.github.barqdb.kotlin.internal.interop.sync.WebsocketErrorCode
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 // FIXME API-CLEANUP Rename io.github.barqdb.interop. to something with platform?
 //  https://github.com/BarqDB/barq-kotlin/issues/56

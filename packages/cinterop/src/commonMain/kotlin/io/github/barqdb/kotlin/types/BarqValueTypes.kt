@@ -1,6 +1,22 @@
+/*
+ * Copyright (c) 2026 the Barq authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 @file:OptIn(ExperimentalUnsignedTypes::class)
 
-package io.github.barqdb.kotlin.bson
+package io.github.barqdb.kotlin.types
 
 import io.github.barqdb.kotlin.internal.interop.BarqInterop
 import kotlinx.serialization.KSerializer
@@ -13,15 +29,15 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlin.random.Random
 
-public typealias ObjectId = BsonObjectId
-public typealias Decimal128 = BsonDecimal128
+public typealias ObjectId = BarqObjectId
+public typealias Decimal128 = BarqDecimal128
 
 @RequiresOptIn
-public annotation class ExperimentalBsonSerializerApi
+public annotation class ExperimentalBarqValueSerializerApi
 
-internal expect fun bsonCurrentTimeMillis(): Long
+internal expect fun barqCurrentTimeMillis(): Long
 
-public enum class BsonType {
+public enum class BarqValueType {
     DOUBLE,
     STRING,
     DOCUMENT,
@@ -45,54 +61,54 @@ public enum class BsonType {
     MAX_KEY
 }
 
-public abstract class BsonValue {
-    public abstract val bsonType: BsonType
+public abstract class BarqValue {
+    public abstract val barqValueType: BarqValueType
 
-    public fun isNull(): Boolean = this is BsonNull
-    public fun isString(): Boolean = this is BsonString
-    public fun isNumber(): Boolean = this is BsonNumber
-    public fun isInt32(): Boolean = this is BsonInt32
-    public fun isInt64(): Boolean = this is BsonInt64
-    public fun isDecimal128(): Boolean = this is BsonDecimal128
-    public fun isObjectId(): Boolean = this is BsonObjectId
-    public fun isBinary(): Boolean = this is BsonBinary
-    public fun isDateTime(): Boolean = this is BsonDateTime
+    public fun isNull(): Boolean = this is BarqNull
+    public fun isString(): Boolean = this is BarqString
+    public fun isNumber(): Boolean = this is BarqNumber
+    public fun isInt32(): Boolean = this is BarqInt32
+    public fun isInt64(): Boolean = this is BarqInt64
+    public fun isDecimal128(): Boolean = this is BarqDecimal128
+    public fun isObjectId(): Boolean = this is BarqObjectId
+    public fun isBinary(): Boolean = this is BarqBinary
+    public fun isDateTime(): Boolean = this is BarqDateTime
 
-    public fun asString(): BsonString = this as BsonString
-    public fun asNumber(): BsonNumber = this as BsonNumber
-    public fun asInt32(): BsonInt32 = this as BsonInt32
-    public fun asInt64(): BsonInt64 = this as BsonInt64
-    public fun asDecimal128(): BsonDecimal128 = this as BsonDecimal128
-    public fun asObjectId(): BsonObjectId = this as BsonObjectId
-    public fun asBinary(): BsonBinary = this as BsonBinary
-    public fun asDateTime(): BsonDateTime = this as BsonDateTime
-    public fun asBsonNull(): BsonNull = this as BsonNull
+    public fun asString(): BarqString = this as BarqString
+    public fun asNumber(): BarqNumber = this as BarqNumber
+    public fun asInt32(): BarqInt32 = this as BarqInt32
+    public fun asInt64(): BarqInt64 = this as BarqInt64
+    public fun asDecimal128(): BarqDecimal128 = this as BarqDecimal128
+    public fun asObjectId(): BarqObjectId = this as BarqObjectId
+    public fun asBinary(): BarqBinary = this as BarqBinary
+    public fun asDateTime(): BarqDateTime = this as BarqDateTime
+    public fun asBarqNull(): BarqNull = this as BarqNull
 
     public fun toJson(): String = when (this) {
-        is BsonNull -> "null"
-        is BsonString -> value.toJsonString()
-        is BsonInt32 -> value.toString()
-        is BsonInt64 -> value.toString()
-        is BsonObjectId -> """{"${'$'}oid":${toHexString().toJsonString()}}"""
-        is BsonDecimal128 -> """{"${'$'}numberDecimal":${toString().toJsonString()}}"""
-        is BsonDateTime -> """{"${'$'}date":{"${'$'}numberLong":${value.toString().toJsonString()}}}"""
-        is BsonBinary -> """{"${'$'}binary":{"base64":${data.toBase64().toJsonString()},"subType":${type.toHexString().toJsonString()}}}"""
-        else -> error("Unsupported BSON value: ${this::class}")
+        is BarqNull -> "null"
+        is BarqString -> value.toJsonString()
+        is BarqInt32 -> value.toString()
+        is BarqInt64 -> value.toString()
+        is BarqObjectId -> """{"${'$'}oid":${toHexString().toJsonString()}}"""
+        is BarqDecimal128 -> """{"${'$'}numberDecimal":${toString().toJsonString()}}"""
+        is BarqDateTime -> """{"${'$'}date":{"${'$'}numberLong":${value.toString().toJsonString()}}}"""
+        is BarqBinary -> """{"${'$'}binary":{"base64":${data.toBase64().toJsonString()},"subType":${type.toHexString().toJsonString()}}}"""
+        else -> error("Unsupported Barq value: ${this::class}")
     }
 }
 
-public abstract class BsonNumber(private val number: Number) : BsonValue() {
+public abstract class BarqNumber(private val number: Number) : BarqValue() {
     public fun intValue(): Int = number.toInt()
     public fun longValue(): Long = number.toLong()
     public fun doubleValue(): Double = number.toDouble()
 }
 
-@Serializable(with = BsonObjectIdSerializer::class)
-public class BsonObjectId private constructor(private val bytes: ByteArray, public val timestamp: Int) :
-    BsonValue(),
-    Comparable<BsonObjectId> {
+@Serializable(with = BarqObjectIdSerializer::class)
+public class BarqObjectId private constructor(private val bytes: ByteArray, public val timestamp: Int) :
+    BarqValue(),
+    Comparable<BarqObjectId> {
 
-    public constructor() : this(fromTimeInSeconds((bsonCurrentTimeMillis() / MILLIS_IN_SECOND).toInt()), false)
+    public constructor() : this(fromTimeInSeconds((barqCurrentTimeMillis() / MILLIS_IN_SECOND).toInt()), false)
     public constructor(timestamp: Long) : this(fromTimeInSeconds((timestamp / MILLIS_IN_SECOND).toInt()), false)
     public constructor(hexString: String) : this(parseObjectIdHex(hexString), false)
     public constructor(byteArray: ByteArray) : this(validateObjectIdBytes(byteArray), true)
@@ -104,15 +120,15 @@ public class BsonObjectId private constructor(private val bytes: ByteArray, publ
         readInt(bytes, 0)
     )
 
-    override val bsonType: BsonType = BsonType.OBJECT_ID
+    override val barqValueType: BarqValueType = BarqValueType.OBJECT_ID
 
     public fun toByteArray(): ByteArray = bytes.copyOf()
 
     public fun toHexString(): String = bytes.toHexString()
 
-    override fun toString(): String = "BsonObjectId(${toHexString()})"
+    override fun toString(): String = "BarqObjectId(${toHexString()})"
 
-    override fun compareTo(other: BsonObjectId): Int {
+    override fun compareTo(other: BarqObjectId): Int {
         val otherBytes = other.bytes
         for (i in 0 until OBJECT_ID_LENGTH) {
             val left = bytes[i].toInt() and 0xFF
@@ -125,7 +141,7 @@ public class BsonObjectId private constructor(private val bytes: ByteArray, publ
     }
 
     override fun equals(other: Any?): Boolean =
-        other is BsonObjectId && bytes.contentEquals(other.bytes)
+        other is BarqObjectId && bytes.contentEquals(other.bytes)
 
     override fun hashCode(): Int = bytes.contentHashCode()
 
@@ -134,7 +150,7 @@ public class BsonObjectId private constructor(private val bytes: ByteArray, publ
         private const val MILLIS_IN_SECOND = 1000
         private const val LOW_ORDER_THREE_BYTES = 0x00FFFFFF
 
-        private val random = Random(bsonCurrentTimeMillis().toInt())
+        private val random = Random(barqCurrentTimeMillis().toInt())
         private val randomValue1 = random.nextInt(0x01000000)
         private val randomValue2 = random.nextInt(0x00008000).toShort()
         private var nextCounter = random.nextInt()
@@ -149,14 +165,14 @@ public class BsonObjectId private constructor(private val bytes: ByteArray, publ
     }
 }
 
-@Serializable(with = BsonDecimal128Serializer::class)
-public class BsonDecimal128 private constructor(public val high: ULong, public val low: ULong) : BsonValue() {
+@Serializable(with = BarqDecimal128Serializer::class)
+public class BarqDecimal128 private constructor(public val high: ULong, public val low: ULong) : BarqValue() {
 
     public constructor(value: String) : this(parseDecimal128(value))
 
     private constructor(words: ULongArray) : this(words[1], words[0])
 
-    override val bsonType: BsonType = BsonType.DECIMAL128
+    override val barqValueType: BarqValueType = BarqValueType.DECIMAL128
 
     public val isNegative: Boolean
         get() = (high and SIGN_BIT) != 0UL
@@ -173,47 +189,47 @@ public class BsonDecimal128 private constructor(public val high: ULong, public v
     override fun toString(): String = BarqInterop.barq_decimal128_to_string(low, high)
 
     override fun equals(other: Any?): Boolean =
-        other is BsonDecimal128 && high == other.high && low == other.low
+        other is BarqDecimal128 && high == other.high && low == other.low
 
     override fun hashCode(): Int = 31 * high.hashCode() + low.hashCode()
 
     public companion object {
         private val SIGN_BIT = 0x8000000000000000UL
 
-        public val POSITIVE_INFINITY: BsonDecimal128 = BsonDecimal128("Infinity")
-        public val NEGATIVE_INFINITY: BsonDecimal128 = BsonDecimal128("-Infinity")
-        public val NEGATIVE_NaN: BsonDecimal128 = BsonDecimal128("-NaN")
-        public val NaN: BsonDecimal128 = BsonDecimal128("NaN")
-        public val POSITIVE_ZERO: BsonDecimal128 = BsonDecimal128("0")
-        public val NEGATIVE_ZERO: BsonDecimal128 = BsonDecimal128("-0")
+        public val POSITIVE_INFINITY: BarqDecimal128 = BarqDecimal128("Infinity")
+        public val NEGATIVE_INFINITY: BarqDecimal128 = BarqDecimal128("-Infinity")
+        public val NEGATIVE_NaN: BarqDecimal128 = BarqDecimal128("-NaN")
+        public val NaN: BarqDecimal128 = BarqDecimal128("NaN")
+        public val POSITIVE_ZERO: BarqDecimal128 = BarqDecimal128("0")
+        public val NEGATIVE_ZERO: BarqDecimal128 = BarqDecimal128("-0")
 
-        public fun fromIEEE754BIDEncoding(high: ULong, low: ULong): BsonDecimal128 =
-            BsonDecimal128(high, low)
+        public fun fromIEEE754BIDEncoding(high: ULong, low: ULong): BarqDecimal128 =
+            BarqDecimal128(high, low)
     }
 }
 
-@Serializable(with = BsonBinarySerializer::class)
-public class BsonBinary(public val type: Byte, public val data: ByteArray) : BsonValue() {
-    public constructor(data: ByteArray) : this(BsonBinarySubType.BINARY.value, data)
-    public constructor(type: BsonBinarySubType, data: ByteArray) : this(type.value, data)
+@Serializable(with = BarqBinarySerializer::class)
+public class BarqBinary(public val type: Byte, public val data: ByteArray) : BarqValue() {
+    public constructor(data: ByteArray) : this(BarqBinarySubType.BINARY.value, data)
+    public constructor(type: BarqBinarySubType, data: ByteArray) : this(type.value, data)
 
-    override val bsonType: BsonType = BsonType.BINARY
+    override val barqValueType: BarqValueType = BarqValueType.BINARY
 
-    public fun clone(): BsonBinary = BsonBinary(type, data.copyOf())
+    public fun clone(): BarqBinary = BarqBinary(type, data.copyOf())
 
-    override fun toString(): String = "BsonBinary(type=$type, data=${data.toHexString()})"
+    override fun toString(): String = "BarqBinary(type=$type, data=${data.toHexString()})"
 
     override fun equals(other: Any?): Boolean =
-        other is BsonBinary && type == other.type && data.contentEquals(other.data)
+        other is BarqBinary && type == other.type && data.contentEquals(other.data)
 
     override fun hashCode(): Int = 31 * type.hashCode() + data.contentHashCode()
 
     public companion object {
-        public fun serializer(): KSerializer<BsonBinary> = BsonBinarySerializer
+        public fun serializer(): KSerializer<BarqBinary> = BarqBinarySerializer
     }
 }
 
-public enum class BsonBinarySubType(public val value: Byte) {
+public enum class BarqBinarySubType(public val value: Byte) {
     BINARY(0x00),
     FUNCTION(0x01),
     OLD_BINARY(0x02),
@@ -225,84 +241,84 @@ public enum class BsonBinarySubType(public val value: Byte) {
     USER_DEFINED(0x80.toByte())
 }
 
-@Serializable(with = BsonDateTimeSerializer::class)
-public data class BsonDateTime(public val value: Long = bsonCurrentTimeMillis()) :
-    BsonValue(),
-    Comparable<BsonDateTime> {
-    override val bsonType: BsonType = BsonType.DATE_TIME
-    override fun compareTo(other: BsonDateTime): Int = value.compareTo(other.value)
+@Serializable(with = BarqDateTimeSerializer::class)
+public data class BarqDateTime(public val value: Long = barqCurrentTimeMillis()) :
+    BarqValue(),
+    Comparable<BarqDateTime> {
+    override val barqValueType: BarqValueType = BarqValueType.DATE_TIME
+    override fun compareTo(other: BarqDateTime): Int = value.compareTo(other.value)
 
     public companion object {
-        public fun serializer(): KSerializer<BsonDateTime> = BsonDateTimeSerializer
+        public fun serializer(): KSerializer<BarqDateTime> = BarqDateTimeSerializer
     }
 }
 
-public data class BsonInt32(public val value: Int) : BsonNumber(value), Comparable<BsonInt32> {
-    override val bsonType: BsonType = BsonType.INT32
-    override fun compareTo(other: BsonInt32): Int = value.compareTo(other.value)
+public data class BarqInt32(public val value: Int) : BarqNumber(value), Comparable<BarqInt32> {
+    override val barqValueType: BarqValueType = BarqValueType.INT32
+    override fun compareTo(other: BarqInt32): Int = value.compareTo(other.value)
 }
 
-public data class BsonInt64(public val value: Long) : BsonNumber(value), Comparable<BsonInt64> {
-    override val bsonType: BsonType = BsonType.INT64
-    override fun compareTo(other: BsonInt64): Int = value.compareTo(other.value)
+public data class BarqInt64(public val value: Long) : BarqNumber(value), Comparable<BarqInt64> {
+    override val barqValueType: BarqValueType = BarqValueType.INT64
+    override fun compareTo(other: BarqInt64): Int = value.compareTo(other.value)
 }
 
-public data class BsonString(public val value: String) : BsonValue(), Comparable<BsonString> {
-    override val bsonType: BsonType = BsonType.STRING
-    override fun compareTo(other: BsonString): Int = value.compareTo(other.value)
+public data class BarqString(public val value: String) : BarqValue(), Comparable<BarqString> {
+    override val barqValueType: BarqValueType = BarqValueType.STRING
+    override fun compareTo(other: BarqString): Int = value.compareTo(other.value)
 }
 
-public object BsonNull : BsonValue() {
-    public val VALUE: BsonNull = this
-    override val bsonType: BsonType = BsonType.NULL
-    override fun toString(): String = "BsonNull"
+public object BarqNull : BarqValue() {
+    public val VALUE: BarqNull = this
+    override val barqValueType: BarqValueType = BarqValueType.NULL
+    override fun toString(): String = "BarqNull"
 }
 
-public object BsonObjectIdSerializer : KSerializer<BsonObjectId> {
+public object BarqObjectIdSerializer : KSerializer<BarqObjectId> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.github.barqdb.kotlin.bson.BsonObjectId", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.github.barqdb.kotlin.types.BarqObjectId", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): BsonObjectId =
-        BsonObjectId(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): BarqObjectId =
+        BarqObjectId(decoder.decodeString())
 
-    override fun serialize(encoder: Encoder, value: BsonObjectId) {
+    override fun serialize(encoder: Encoder, value: BarqObjectId) {
         encoder.encodeString(value.toHexString())
     }
 }
 
-public object BsonDecimal128Serializer : KSerializer<BsonDecimal128> {
+public object BarqDecimal128Serializer : KSerializer<BarqDecimal128> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.github.barqdb.kotlin.bson.BsonDecimal128", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.github.barqdb.kotlin.types.BarqDecimal128", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): BsonDecimal128 =
-        BsonDecimal128(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): BarqDecimal128 =
+        BarqDecimal128(decoder.decodeString())
 
-    override fun serialize(encoder: Encoder, value: BsonDecimal128) {
+    override fun serialize(encoder: Encoder, value: BarqDecimal128) {
         encoder.encodeString(value.toString())
     }
 }
 
-public object BsonDateTimeSerializer : KSerializer<BsonDateTime> {
+public object BarqDateTimeSerializer : KSerializer<BarqDateTime> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.github.barqdb.kotlin.bson.BsonDateTime", PrimitiveKind.LONG)
+        PrimitiveSerialDescriptor("io.github.barqdb.kotlin.types.BarqDateTime", PrimitiveKind.LONG)
 
-    override fun deserialize(decoder: Decoder): BsonDateTime =
-        BsonDateTime(decoder.decodeLong())
+    override fun deserialize(decoder: Decoder): BarqDateTime =
+        BarqDateTime(decoder.decodeLong())
 
-    override fun serialize(encoder: Encoder, value: BsonDateTime) {
+    override fun serialize(encoder: Encoder, value: BarqDateTime) {
         encoder.encodeLong(value.value)
     }
 }
 
-public object BsonBinarySerializer : KSerializer<BsonBinary> {
+public object BarqBinarySerializer : KSerializer<BarqBinary> {
     private val byteArraySerializer = ByteArraySerializer()
 
     override val descriptor: SerialDescriptor = byteArraySerializer.descriptor
 
-    override fun deserialize(decoder: Decoder): BsonBinary =
-        BsonBinary(byteArraySerializer.deserialize(decoder))
+    override fun deserialize(decoder: Decoder): BarqBinary =
+        BarqBinary(byteArraySerializer.deserialize(decoder))
 
-    override fun serialize(encoder: Encoder, value: BsonBinary) {
+    override fun serialize(encoder: Encoder, value: BarqBinary) {
         byteArraySerializer.serialize(encoder, value.data)
     }
 }
@@ -334,14 +350,14 @@ private fun composeObjectIdBytes(timestamp: Int, randomValue1: Int, randomValue2
 }
 
 private fun validateObjectIdBytes(byteArray: ByteArray): ByteArray {
-    require(byteArray.size == BsonObjectId.OBJECT_ID_LENGTH) {
-        "Invalid byteArray.size ${byteArray.size} != ${BsonObjectId.OBJECT_ID_LENGTH}"
+    require(byteArray.size == BarqObjectId.OBJECT_ID_LENGTH) {
+        "Invalid byteArray.size ${byteArray.size} != ${BarqObjectId.OBJECT_ID_LENGTH}"
     }
     return byteArray.copyOf()
 }
 
 private fun parseObjectIdHex(hexString: String): ByteArray {
-    require(hexString.length == BsonObjectId.OBJECT_ID_LENGTH * 2 && hexString.all { it.isHexDigit() }) {
+    require(hexString.length == BarqObjectId.OBJECT_ID_LENGTH * 2 && hexString.all { it.isHexDigit() }) {
         "Invalid hexadecimal representation of an ObjectId: [$hexString]"
     }
     return hexString.parseHex()

@@ -23,8 +23,8 @@ import io.github.barqdb.kotlin.types.BarqDictionary
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KMutableProperty1
 
 class BarqDictionaryContainer : BarqObject {
@@ -42,7 +42,7 @@ class BarqDictionaryContainer : BarqObject {
     var floatDictionaryField: BarqDictionary<Float> = barqDictionaryOf()
     var doubleDictionaryField: BarqDictionary<Double> = barqDictionaryOf()
     var timestampDictionaryField: BarqDictionary<BarqInstant> = barqDictionaryOf()
-    var bsonObjectIdDictionaryField: BarqDictionary<BsonObjectId> = barqDictionaryOf()
+    var objectIdDictionaryField: BarqDictionary<ObjectId> = barqDictionaryOf()
     var uuidDictionaryField: BarqDictionary<BarqUUID> = barqDictionaryOf()
     var binaryDictionaryField: BarqDictionary<ByteArray> = barqDictionaryOf()
     var decimal128DictionaryField: BarqDictionary<Decimal128> = barqDictionaryOf()
@@ -57,7 +57,7 @@ class BarqDictionaryContainer : BarqObject {
     var nullableFloatDictionaryField: BarqDictionary<Float?> = barqDictionaryOf()
     var nullableDoubleDictionaryField: BarqDictionary<Double?> = barqDictionaryOf()
     var nullableTimestampDictionaryField: BarqDictionary<BarqInstant?> = barqDictionaryOf()
-    var nullableBsonObjectIdDictionaryField: BarqDictionary<BsonObjectId?> = barqDictionaryOf()
+    var nullableObjectIdDictionaryField: BarqDictionary<ObjectId?> = barqDictionaryOf()
     var nullableUUIDDictionaryField: BarqDictionary<BarqUUID?> = barqDictionaryOf()
     var nullableBinaryDictionaryField: BarqDictionary<ByteArray?> = barqDictionaryOf()
     var nullableDecimal128DictionaryField: BarqDictionary<Decimal128?> = barqDictionaryOf()
@@ -78,7 +78,7 @@ class BarqDictionaryContainer : BarqObject {
             Float::class to BarqDictionaryContainer::floatDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
             Double::class to BarqDictionaryContainer::doubleDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
             BarqInstant::class to BarqDictionaryContainer::timestampDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
-            BsonObjectId::class to BarqDictionaryContainer::bsonObjectIdDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
+            ObjectId::class to BarqDictionaryContainer::objectIdDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
             BarqUUID::class to BarqDictionaryContainer::uuidDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
             ByteArray::class to BarqDictionaryContainer::binaryDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
             Decimal128::class to BarqDictionaryContainer::decimal128DictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any>>,
@@ -96,7 +96,7 @@ class BarqDictionaryContainer : BarqObject {
             Float::class to BarqDictionaryContainer::nullableFloatDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
             Double::class to BarqDictionaryContainer::nullableDoubleDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
             BarqInstant::class to BarqDictionaryContainer::nullableTimestampDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
-            BsonObjectId::class to BarqDictionaryContainer::nullableBsonObjectIdDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
+            ObjectId::class to BarqDictionaryContainer::nullableObjectIdDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
             BarqUUID::class to BarqDictionaryContainer::nullableUUIDDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
             ByteArray::class to BarqDictionaryContainer::nullableBinaryDictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,
             Decimal128::class to BarqDictionaryContainer::nullableDecimal128DictionaryField as KMutableProperty1<BarqDictionaryContainer, BarqDictionary<Any?>>,

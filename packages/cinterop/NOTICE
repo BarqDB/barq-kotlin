@@ -1,0 +1,11 @@
+Barq Kotlin C Interop
+Copyright (c) 2026 the Barq authors
+
+This module is part of Barq Kotlin.
+
+Original Barq-owned source files in this module, including the Barq value
+types under src/commonMain/kotlin/io/github/barqdb/kotlin/types,
+are licensed under the Apache License, Version 2.0.
+
+Barq Kotlin is a modified fork of the Realm Kotlin SDK (realm-kotlin).
+See the top-level NOTICE file for fork attribution and trademark notices.

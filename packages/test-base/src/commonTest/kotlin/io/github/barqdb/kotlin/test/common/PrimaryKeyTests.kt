@@ -18,8 +18,8 @@ package io.github.barqdb.kotlin.test.common
 import io.github.barqdb.kotlin.Barq
 import io.github.barqdb.kotlin.BarqConfiguration
 import io.github.barqdb.kotlin.entities.primarykey.NoPrimaryKey
-import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyBsonObjectId
-import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyBsonObjectIdNullable
+import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyObjectId
+import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyObjectIdNullable
 import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyByte
 import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyByteNullable
 import io.github.barqdb.kotlin.entities.primarykey.PrimaryKeyChar
@@ -43,7 +43,7 @@ import io.github.barqdb.kotlin.test.util.TypeDescriptor.rType
 import io.github.barqdb.kotlin.test.util.use
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.reflect.typeOf
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -170,8 +170,8 @@ class PrimaryKeyTests {
             typeOf<Long?>(),
             typeOf<String>(),
             typeOf<String?>(),
-            typeOf<BsonObjectId>(),
-            typeOf<BsonObjectId?>(),
+            typeOf<ObjectId>(),
+            typeOf<ObjectId?>(),
             typeOf<BarqUUID>(),
             typeOf<BarqUUID?>(),
         ).map { it.rType() }.toMutableSet()
@@ -199,8 +199,8 @@ class PrimaryKeyTests {
             PrimaryKeyLongNullable::class,
             PrimaryKeyString::class,
             PrimaryKeyStringNullable::class,
-            PrimaryKeyBsonObjectId::class,
-            PrimaryKeyBsonObjectIdNullable::class,
+            PrimaryKeyObjectId::class,
+            PrimaryKeyObjectIdNullable::class,
             PrimaryKeyBarqUUID::class,
             PrimaryKeyBarqUUIDNullable::class,
         )
@@ -219,8 +219,8 @@ class PrimaryKeyTests {
                 PrimaryKeyLongNullable::class,
                 PrimaryKeyString::class,
                 PrimaryKeyStringNullable::class,
-                PrimaryKeyBsonObjectId::class,
-                PrimaryKeyBsonObjectIdNullable::class,
+                PrimaryKeyObjectId::class,
+                PrimaryKeyObjectIdNullable::class,
                 PrimaryKeyBarqUUID::class,
                 PrimaryKeyBarqUUIDNullable::class,
             )

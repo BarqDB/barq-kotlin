@@ -51,7 +51,7 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import io.github.barqdb.kotlin.bson.BsonDecimal128
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 
 /**
@@ -249,7 +249,7 @@ private fun <T : Any> queryTypeValidator(
         }
     } else if (fieldType == PropertyType.BARQ_PROPERTY_TYPE_DECIMAL128) {
         // Decimal128 can only be coerced to Decimal128
-        if (type != BsonDecimal128::class) {
+        if (type != Decimal128::class) {
             throw IllegalArgumentException("Decimal128 properties cannot be aggregated as '${type.simpleName}'. Use Decimal128 as output type instead.")
         }
     } else if (validateTimestamp && fieldType == PropertyType.BARQ_PROPERTY_TYPE_TIMESTAMP) {

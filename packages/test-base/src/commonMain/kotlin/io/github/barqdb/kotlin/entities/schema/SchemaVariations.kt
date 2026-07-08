@@ -30,8 +30,8 @@ import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.annotations.FullText
 import io.github.barqdb.kotlin.types.annotations.Index
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 
 /**
  * Class used for testing of the schema API; thus, doesn't exhaust modeling features but provides
@@ -54,7 +54,7 @@ class SchemaVariations : BarqObject {
     @FullText
     var fulltext: String = "A very long string"
     var date: BarqInstant = BarqInstant.from(0, 0)
-    var bsonObjectId: BsonObjectId = BsonObjectId()
+    var objectId: ObjectId = ObjectId()
     var decimal128: Decimal128 = Decimal128("1")
     var uuid: BarqUUID = BarqUUID.random()
     var binary: ByteArray = byteArrayOf(22, 66)
@@ -76,7 +76,7 @@ class SchemaVariations : BarqObject {
     var decimal128List: BarqList<Decimal128> = barqListOf()
     var stringList: BarqList<String> = barqListOf()
     var dateList: BarqList<BarqInstant> = barqListOf()
-    var bsonObjectIdList: BarqList<BsonObjectId> = barqListOf()
+    var objectIdList: BarqList<ObjectId> = barqListOf()
     var uuidList: BarqList<BarqUUID> = barqListOf()
     var binaryList: BarqList<ByteArray> = barqListOf()
 
@@ -97,7 +97,7 @@ class SchemaVariations : BarqObject {
     var decimal128Set: BarqSet<Decimal128> = barqSetOf()
     var stringSet: BarqSet<String> = barqSetOf()
     var dateSet: BarqSet<BarqInstant> = barqSetOf()
-    var bsonObjectIdSet: BarqSet<BsonObjectId> = barqSetOf()
+    var objectIdSet: BarqSet<ObjectId> = barqSetOf()
     var uuidSet: BarqSet<BarqUUID> = barqSetOf()
     var binarySet: BarqSet<ByteArray> = barqSetOf()
 
@@ -118,7 +118,7 @@ class SchemaVariations : BarqObject {
     var decimal128Map: BarqDictionary<Decimal128> = barqDictionaryOf()
     var stringMap: BarqDictionary<String> = barqDictionaryOf()
     var dateMap: BarqDictionary<BarqInstant> = barqDictionaryOf()
-    var bsonObjectIdMap: BarqDictionary<BsonObjectId> = barqDictionaryOf()
+    var objectIdMap: BarqDictionary<ObjectId> = barqDictionaryOf()
     var uuidMap: BarqDictionary<BarqUUID> = barqDictionaryOf()
     var binaryMap: BarqDictionary<ByteArray> = barqDictionaryOf()
 

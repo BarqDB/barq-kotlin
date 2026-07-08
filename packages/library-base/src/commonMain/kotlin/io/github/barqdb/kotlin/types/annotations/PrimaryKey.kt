@@ -29,7 +29,7 @@ import io.github.barqdb.kotlin.types.BarqUUID
  * identify the object.
  *
  * This annotation applies to the following primitive types: String, Byte, Char,
- * Short, Int, Long, [io.github.barqdb.kotlin.bson.ObjectId] and [BarqUUID],
+ * Short, Int, Long, [io.github.barqdb.kotlin.types.ObjectId] and [BarqUUID],
  * as well as their nullable variants.
  *
  * It cannot be applied on a property that also has a [FullText] annotation.

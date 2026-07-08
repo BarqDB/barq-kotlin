@@ -2,7 +2,7 @@ package io.github.barqdb.kotlin.internal
 
 import io.github.barqdb.kotlin.internal.interop.Timestamp
 import io.github.barqdb.kotlin.types.BarqInstant
-import io.github.barqdb.kotlin.bson.BsonDateTime
+import io.github.barqdb.kotlin.types.BarqDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.nanoseconds
@@ -46,7 +46,7 @@ public fun Duration.toBarqInstant(): BarqInstant {
 internal fun BarqInstant.restrictToMillisPrecision() =
     toDuration().inWholeMilliseconds.milliseconds.toBarqInstant()
 @Suppress("NOTHING_TO_INLINE")
-public inline fun BarqInstant.asBsonDateTime(): BsonDateTime = BsonDateTime(toDuration().inWholeMilliseconds)
+public inline fun BarqInstant.asBarqDateTime(): BarqDateTime = BarqDateTime(toDuration().inWholeMilliseconds)
 
 @Suppress("NOTHING_TO_INLINE")
-public inline fun BsonDateTime.asBarqInstant(): BarqInstant = value.milliseconds.toBarqInstant()
+public inline fun BarqDateTime.asBarqInstant(): BarqInstant = value.milliseconds.toBarqInstant()

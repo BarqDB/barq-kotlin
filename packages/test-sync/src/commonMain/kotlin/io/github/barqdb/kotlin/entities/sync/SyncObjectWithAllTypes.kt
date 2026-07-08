@@ -30,8 +30,8 @@ import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 
 private typealias FieldDataFactory = (SyncObjectWithAllTypes) -> Unit
 private typealias FieldValidator = (SyncObjectWithAllTypes) -> Unit
@@ -41,7 +41,7 @@ class SyncObjectWithAllTypes : BarqObject {
     @PrimaryKey
 
     @Suppress("VariableNaming")
-    var _id: String = "id-${BsonObjectId()}"
+    var _id: String = "id-${ObjectId()}"
 
     // Non-nullable types
     var stringField: String = "hello world"
@@ -55,7 +55,7 @@ class SyncObjectWithAllTypes : BarqObject {
     var floatField: Float = 0.0.toFloat()
     var decimal128Field: Decimal128 = Decimal128("0")
     var barqInstantField: BarqInstant = BarqInstant.MIN
-    var objectIdField: BsonObjectId = BsonObjectId()
+    var objectIdField: ObjectId = ObjectId()
     var barqUUIDField: BarqUUID = BarqUUID.random()
     var binaryField: ByteArray = byteArrayOf(42)
     var mutableBarqIntField: MutableBarqInt = MutableBarqInt.create(42)
@@ -73,7 +73,7 @@ class SyncObjectWithAllTypes : BarqObject {
     var floatNullableField: Float? = null
     var decimal128NullableField: Decimal128? = null
     var barqInstantNullableField: BarqInstant? = null
-    var objectIdNullableField: BsonObjectId? = null
+    var objectIdNullableField: ObjectId? = null
     var barqUUIDNullableField: BarqUUID? = null
     var binaryNullableField: ByteArray? = null
     var objectNullableField: SyncObjectWithAllTypes? = null
@@ -93,7 +93,7 @@ class SyncObjectWithAllTypes : BarqObject {
     var floatBarqList: BarqList<Float> = barqListOf(0.0.toFloat())
     var decimal128BarqList: BarqList<Decimal128> = barqListOf(Decimal128("0.0"))
     var barqInstantBarqList: BarqList<BarqInstant> = barqListOf(BarqInstant.MIN)
-    var objectIdBarqList: BarqList<BsonObjectId> = barqListOf(BsonObjectId())
+    var objectIdBarqList: BarqList<ObjectId> = barqListOf(ObjectId())
     var barqUUIDBarqList: BarqList<BarqUUID> = barqListOf(BarqUUID.random())
     var binaryBarqList: BarqList<ByteArray> = barqListOf(byteArrayOf(42))
     var objectBarqList: BarqList<SyncObjectWithAllTypes> = barqListOf()
@@ -115,7 +115,7 @@ class SyncObjectWithAllTypes : BarqObject {
     var floatBarqSet: BarqSet<Float> = barqSetOf(0.0.toFloat())
     var decimal128BarqSet: BarqSet<Decimal128> = barqSetOf(Decimal128("0.0"))
     var barqInstantBarqSet: BarqSet<BarqInstant> = barqSetOf(BarqInstant.MIN)
-    var objectIdBarqSet: BarqSet<BsonObjectId> = barqSetOf(BsonObjectId())
+    var objectIdBarqSet: BarqSet<ObjectId> = barqSetOf(ObjectId())
     var barqUUIDBarqSet: BarqSet<BarqUUID> = barqSetOf(BarqUUID.random())
     var binaryBarqSet: BarqSet<ByteArray> = barqSetOf(byteArrayOf(42))
     var objectBarqSet: BarqSet<SyncObjectWithAllTypes> = barqSetOf()
@@ -137,7 +137,7 @@ class SyncObjectWithAllTypes : BarqObject {
     var floatBarqDictionary: BarqDictionary<Float> = barqDictionaryOf("A" to 0.0.toFloat())
     var decimal128BarqDictionary: BarqDictionary<Decimal128> = barqDictionaryOf("A" to Decimal128("0.0"))
     var barqInstantBarqDictionary: BarqDictionary<BarqInstant> = barqDictionaryOf("A" to BarqInstant.MIN)
-    var objectIdBarqDictionary: BarqDictionary<BsonObjectId> = barqDictionaryOf("A" to BsonObjectId())
+    var objectIdBarqDictionary: BarqDictionary<ObjectId> = barqDictionaryOf("A" to ObjectId())
     var barqUUIDBarqDictionary: BarqDictionary<BarqUUID> = barqDictionaryOf("A" to BarqUUID.random())
     var binaryBarqDictionary: BarqDictionary<ByteArray> = barqDictionaryOf("A" to byteArrayOf(42))
 
@@ -401,9 +401,9 @@ class SyncObjectWithAllTypes : BarqObject {
                                 )
                             }
                             BarqStorageType.OBJECT_ID -> {
-                                val minObjId = BsonObjectId("000000000000000000000000")
-                                val maxObjId = BsonObjectId("ffffffffffffffffffffffff")
-                                val randomObjId = BsonObjectId("503f1f77bcf86cd793439011")
+                                val minObjId = ObjectId("000000000000000000000000")
+                                val maxObjId = ObjectId("ffffffffffffffffffffffff")
+                                val randomObjId = ObjectId("503f1f77bcf86cd793439011")
                                 Pair(
                                     { obj: SyncObjectWithAllTypes ->
                                         obj.objectIdField = randomObjId

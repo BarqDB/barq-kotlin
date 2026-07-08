@@ -19,7 +19,7 @@ package io.github.barqdb.kotlin.entities.primarykey
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.random.Random
 import kotlin.random.nextULong
 
@@ -86,14 +86,14 @@ class PrimaryKeyStringNullable : BarqObject {
     var primaryKey: String? = Random.nextULong().toString()
 }
 
-class PrimaryKeyBsonObjectId : BarqObject {
+class PrimaryKeyObjectId : BarqObject {
     @PrimaryKey
-    var primaryKey: BsonObjectId = BsonObjectId()
+    var primaryKey: ObjectId = ObjectId()
 }
 
-class PrimaryKeyBsonObjectIdNullable : BarqObject {
+class PrimaryKeyObjectIdNullable : BarqObject {
     @PrimaryKey
-    var primaryKey: BsonObjectId? = BsonObjectId("507f191e810c19729de860ea")
+    var primaryKey: ObjectId? = ObjectId("507f191e810c19729de860ea")
 }
 
 class PrimaryKeyBarqUUID : BarqObject {

@@ -30,7 +30,7 @@ import io.github.barqdb.kotlin.internal.interop.sync.WebSocketTransport
 import io.github.barqdb.kotlin.internal.interop.sync.WebsocketCallbackResult
 import io.github.barqdb.kotlin.internal.interop.sync.WebsocketErrorCode
 import kotlinx.coroutines.CoroutineDispatcher
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName

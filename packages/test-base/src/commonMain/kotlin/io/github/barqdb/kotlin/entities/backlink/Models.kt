@@ -27,7 +27,7 @@ import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.annotations.Ignore
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 class Child : BarqObject {
     val parents by backlinks(Parent::child)

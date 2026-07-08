@@ -41,8 +41,8 @@ import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.geo.GeoBox
 import io.github.barqdb.kotlin.types.geo.GeoCircle
 import io.github.barqdb.kotlin.types.geo.GeoPolygon
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 
 // This file contains all code for converting public API values into values passed to the C-API.
@@ -96,8 +96,8 @@ public inline fun barqValueToBarqInstant(transport: BarqValue): BarqInstant =
     BarqInstantImpl(transport.getTimestamp())
 public inline fun barqValueToFloat(transport: BarqValue): Float = transport.getFloat()
 public inline fun barqValueToDouble(transport: BarqValue): Double = transport.getDouble()
-public inline fun barqValueToObjectId(transport: BarqValue): BsonObjectId =
-    BsonObjectId(transport.getObjectIdBytes())
+public inline fun barqValueToObjectId(transport: BarqValue): ObjectId =
+    ObjectId(transport.getObjectIdBytes())
 
 public inline fun barqValueToBarqUUID(transport: BarqValue): BarqUUID = BarqUUIDImpl(transport.getUUIDBytes())
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -128,7 +128,7 @@ internal inline fun barqValueToBarqAny(
             ValueType.BARQ_TYPE_DOUBLE -> BarqAny.create(barqValue.getDouble())
             ValueType.BARQ_TYPE_DECIMAL128 -> BarqAny.create(barqValueToDecimal128(barqValue))
             ValueType.BARQ_TYPE_OBJECT_ID ->
-                BarqAny.create(BsonObjectId(barqValue.getObjectIdBytes()))
+                BarqAny.create(ObjectId(barqValue.getObjectIdBytes()))
             ValueType.BARQ_TYPE_UUID -> BarqAny.create(BarqUUIDImpl(barqValue.getUUIDBytes()))
             ValueType.BARQ_TYPE_LINK -> {
                 if (issueDynamicObject) {
@@ -309,11 +309,11 @@ internal object BarqInstantConverter : PassThroughPublicConverter<BarqInstant>()
         timestampTransport(value?.let { it as Timestamp })
 }
 
-internal object ObjectIdConverter : PassThroughPublicConverter<BsonObjectId>() {
-    override inline fun fromBarqValue(barqValue: BarqValue): BsonObjectId? =
+internal object ObjectIdConverter : PassThroughPublicConverter<ObjectId>() {
+    override inline fun fromBarqValue(barqValue: BarqValue): ObjectId? =
         if (barqValue.isNull()) null else barqValueToObjectId(barqValue)
 
-    override inline fun MemTrackingAllocator.toBarqValue(value: BsonObjectId?): BarqValue =
+    override inline fun MemTrackingAllocator.toBarqValue(value: ObjectId?): BarqValue =
         objectIdTransport(value?.toByteArray())
 }
 // Top level methods to allow inlining from compiler plugin
@@ -348,7 +348,7 @@ internal val primitiveTypeConverters: Map<KClass<*>, BarqValueConverter<*>> =
         Int::class to IntConverter,
         BarqInstant::class to BarqInstantConverter,
         BarqInstantImpl::class to BarqInstantConverter,
-        BsonObjectId::class to ObjectIdConverter,
+        ObjectId::class to ObjectIdConverter,
         BarqUUID::class to BarqUUIDConverter,
         BarqUUIDImpl::class to BarqUUIDConverter,
         ByteArray::class to ByteArrayConverter,
@@ -462,7 +462,7 @@ internal inline fun BarqValue.asPrimitiveBarqAnyOrElse(
     ValueType.BARQ_TYPE_FLOAT -> BarqAny.create(getFloat())
     ValueType.BARQ_TYPE_DOUBLE -> BarqAny.create(getDouble())
     ValueType.BARQ_TYPE_DECIMAL128 -> BarqAny.create(barqValueToDecimal128(this))
-    ValueType.BARQ_TYPE_OBJECT_ID -> BarqAny.create(BsonObjectId(getObjectIdBytes()))
+    ValueType.BARQ_TYPE_OBJECT_ID -> BarqAny.create(ObjectId(getObjectIdBytes()))
     ValueType.BARQ_TYPE_UUID -> BarqAny.create(BarqUUIDImpl(getUUIDBytes()))
     else -> elseBlock()
 }

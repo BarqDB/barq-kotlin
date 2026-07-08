@@ -4,9 +4,9 @@
 -keepclassmembers class io.github.barqdb.kotlin.types.BarqInstant {
     io.github.barqdb.kotlin.types.BarqInstant$Companion Companion;
 }
--keep class io.github.barqdb.kotlin.bson.BsonObjectId$Companion
--keepclassmembers class io.github.barqdb.kotlin.bson.BsonObjectId {
-    io.github.barqdb.kotlin.bson.BsonObjectId$Companion Companion;
+-keep class io.github.barqdb.kotlin.types.BarqObjectId$Companion
+-keepclassmembers class io.github.barqdb.kotlin.types.BarqObjectId {
+    io.github.barqdb.kotlin.types.BarqObjectId$Companion Companion;
 }
 -keep class io.github.barqdb.kotlin.dynamic.DynamicBarqObject$Companion, io.github.barqdb.kotlin.dynamic.DynamicMutableBarqObject$Companion
 -keepclassmembers class io.github.barqdb.kotlin.dynamic.DynamicBarqObject, io.github.barqdb.kotlin.dynamic.DynamicMutableBarqObject {

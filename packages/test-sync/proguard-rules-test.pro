@@ -22,15 +22,15 @@
   <1>.<2>$Companion Companion;
 }
 
-## Required to make asserted messages in FunctionTests and BsonEncoder work
+## Required to make asserted messages in FunctionTests and BarqEncoder work
 -keep class io.github.barqdb.kotlin.types.MutableBarqInt
 -keep class io.github.barqdb.kotlin.types.BarqUUID
 -keep class io.github.barqdb.kotlin.types.BarqList
--keep class io.github.barqdb.kotlin.bson.* {
+-keep class io.github.barqdb.kotlin.types.* {
     *;
 }
 
--keep class io.github.barqdb.kotlin.bson.serialization.* {
+-keep class io.github.barqdb.kotlin.types.serialization.* {
     *;
 }
 

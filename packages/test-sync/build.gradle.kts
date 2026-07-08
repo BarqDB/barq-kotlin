@@ -123,8 +123,7 @@ kotlin {
     // All kotlin compilation tasks
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>> {
         compilerOptions.freeCompilerArgs.addAll(
-            "-P", "plugin:io.github.barqdb.kotlin:bundleId=TEST_BUNDLE_ID",
-            "-opt-in=io.github.barqdb.kotlin.bson.ExperimentalBsonSerializerApi"
+            "-opt-in=io.github.barqdb.kotlin.types.ExperimentalBarqValueSerializerApi"
         )
     }
 }

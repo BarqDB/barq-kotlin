@@ -60,9 +60,8 @@ import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
 import kotlinx.coroutines.test.runTest
-import io.github.barqdb.kotlin.bson.BsonDecimal128
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.reflect.KClass
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -227,13 +226,13 @@ class DynamicMutableBarqObjectTests {
                                 )
                             }
                             BarqStorageType.OBJECT_ID -> {
-                                val value = BsonObjectId()
+                                val value = ObjectId()
                                 dynamicSample.set(name, value)
                                 assertEquals(value, dynamicSample.getNullableValue(name))
                                 dynamicSample.set(name, null)
                                 assertEquals(
                                     null,
-                                    dynamicSample.getNullableValue<BsonObjectId>(name)
+                                    dynamicSample.getNullableValue<ObjectId>(name)
                                 )
                             }
                             BarqStorageType.UUID -> {
@@ -351,7 +350,7 @@ class DynamicMutableBarqObjectTests {
                                 assertEquals(value, dynamicSample.getValue(name))
                             }
                             BarqStorageType.OBJECT_ID -> {
-                                val value = BsonObjectId()
+                                val value = ObjectId()
                                 dynamicSample.set(name, value)
                                 assertEquals(value, dynamicSample.getValue(name))
                             }
@@ -463,7 +462,7 @@ class DynamicMutableBarqObjectTests {
                                 dynamicSample.getNullableValueList(property.name),
                                 property,
                                 Decimal128("1.84467440731231618E-615"),
-                                BsonDecimal128::class
+                                Decimal128::class
                             )
                             BarqStorageType.TIMESTAMP -> assertionsForNullable(
                                 dynamicSample.getNullableValueList(property.name),
@@ -474,8 +473,8 @@ class DynamicMutableBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> assertionsForNullable(
                                 dynamicSample.getNullableValueList(property.name),
                                 property,
-                                BsonObjectId(),
-                                BsonObjectId::class
+                                ObjectId(),
+                                ObjectId::class
                             )
                             BarqStorageType.UUID -> assertionsForNullable(
                                 dynamicSample.getNullableValueList(property.name),
@@ -636,7 +635,7 @@ class DynamicMutableBarqObjectTests {
                                 dynamicSample.getValueList(property.name),
                                 property,
                                 Decimal128("1.84467440731231618E-615"),
-                                BsonDecimal128::class
+                                Decimal128::class
                             )
                             BarqStorageType.TIMESTAMP -> assertionsForValue(
                                 dynamicSample.getValueList(property.name),
@@ -647,8 +646,8 @@ class DynamicMutableBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> assertionsForValue(
                                 dynamicSample.getValueList(property.name),
                                 property,
-                                BsonObjectId(),
-                                BsonObjectId::class
+                                ObjectId(),
+                                ObjectId::class
                             )
                             BarqStorageType.UUID -> assertionsForValue(
                                 dynamicSample.getValueList(property.name),
@@ -752,8 +751,8 @@ class DynamicMutableBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> assertionsForNullable(
                                 dynamicSample.getNullableValueSet(property.name),
                                 property,
-                                BsonObjectId(),
-                                BsonObjectId::class
+                                ObjectId(),
+                                ObjectId::class
                             )
                             BarqStorageType.UUID -> assertionsForNullable(
                                 dynamicSample.getNullableValueSet(property.name),
@@ -913,8 +912,8 @@ class DynamicMutableBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> assertionsForValue(
                                 dynamicSample.getValueSet(property.name),
                                 property,
-                                BsonObjectId(),
-                                BsonObjectId::class
+                                ObjectId(),
+                                ObjectId::class
                             )
                             BarqStorageType.UUID -> assertionsForValue(
                                 dynamicSample.getValueSet(property.name),
@@ -932,7 +931,7 @@ class DynamicMutableBarqObjectTests {
                                 dynamicSample.getValueSet(property.name),
                                 property,
                                 Decimal128("1.84467440731231618E-615"),
-                                BsonDecimal128::class
+                                Decimal128::class
                             )
                             BarqStorageType.OBJECT -> {
                                 val value = dynamicMutableBarq.copyToBarq(
@@ -1078,8 +1077,8 @@ class DynamicMutableBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> assertionsForNullable(
                                 dynamicSample.getNullableValueDictionary(property.name),
                                 property,
-                                BsonObjectId(),
-                                BsonObjectId::class
+                                ObjectId(),
+                                ObjectId::class
                             )
                             BarqStorageType.UUID -> assertionsForNullable(
                                 dynamicSample.getNullableValueDictionary(property.name),
@@ -1276,8 +1275,8 @@ class DynamicMutableBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> assertionsForValue(
                                 dynamicSample.getValueDictionary(property.name),
                                 property,
-                                BsonObjectId(),
-                                BsonObjectId::class
+                                ObjectId(),
+                                ObjectId::class
                             )
                             BarqStorageType.UUID -> assertionsForValue(
                                 dynamicSample.getValueDictionary(property.name),

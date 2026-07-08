@@ -89,7 +89,6 @@ internal object Names {
 
 internal object FqNames {
     val PACKAGE_ANNOTATIONS = FqName("io.github.barqdb.kotlin.types.annotations")
-    val PACKAGE_BSON = FqName("io.github.barqdb.kotlin.bson")
     val PACKAGE_KOTLIN_COLLECTIONS = FqName("kotlin.collections")
     val PACKAGE_KOTLIN_REFLECT = FqName("kotlin.reflect")
     val PACKAGE_TYPES: FqName = FqName("io.github.barqdb.kotlin.types")
@@ -146,8 +145,8 @@ object ClassIds {
     val BARQ_INSTANT = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("BarqInstant"))
     val BARQ_BACKLINKS = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("BacklinksDelegate"))
     val BARQ_EMBEDDED_BACKLINKS = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("EmbeddedBacklinksDelegate"))
-    val BSON_OBJECT_ID = ClassId(FqNames.PACKAGE_BSON, Name.identifier("BsonObjectId"))
-    val BSON_DECIMAL128 = ClassId(FqNames.PACKAGE_BSON, Name.identifier("BsonDecimal128"))
+    val BARQ_OBJECT_ID = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("BarqObjectId"))
+    val BARQ_DECIMAL128 = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("BarqDecimal128"))
     val BARQ_UUID = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("BarqUUID"))
     val BARQ_MUTABLE_INTEGER = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("MutableBarqInt"))
     val BARQ_ANY = ClassId(FqNames.PACKAGE_TYPES, Name.identifier("BarqAny"))

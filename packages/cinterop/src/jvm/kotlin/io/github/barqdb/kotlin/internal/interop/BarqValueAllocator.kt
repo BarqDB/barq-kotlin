@@ -18,7 +18,7 @@
 package io.github.barqdb.kotlin.internal.interop
 
 import io.github.barqdb.kotlin.internal.interop.BarqInterop.cptr
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
 
 /**
  * Singleton object as we just rely on GC'ed barq_value_ts and don't keep track of the actual

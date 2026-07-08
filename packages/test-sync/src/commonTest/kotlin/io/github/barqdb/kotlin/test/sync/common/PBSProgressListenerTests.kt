@@ -71,7 +71,7 @@ class PBSProgressListenerTests {
     fun setup() {
         BarqLog.setLevel(LogLevel.INFO)
         app = TestApp(this::class.simpleName, DefaultPartitionBasedAppInitializer)
-        partitionValue = io.github.barqdb.kotlin.bson.ObjectId().toString()
+        partitionValue = io.github.barqdb.kotlin.types.ObjectId().toString()
     }
 
     @AfterTest

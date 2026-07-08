@@ -27,14 +27,14 @@ import io.github.barqdb.kotlin.test.platform.PlatformUtils
 import io.github.barqdb.kotlin.test.util.use
 import io.github.barqdb.kotlin.types.BarqInstant
 import kotlinx.datetime.Clock
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class BsonObjectIdTests {
+class ObjectIdTests {
 
     private fun BarqInstant.asMillis() = epochSeconds * 1000
 
@@ -112,14 +112,14 @@ class BsonObjectIdTests {
         barq.writeBlocking {
             copyToBarq(
                 Sample().apply {
-                    bsonObjectIdField = objectId
+                    objectIdField = objectId
                 }
             )
             val managedObjectId = query<Sample>()
                 .first()
                 .find { sampleObject ->
                     assertNotNull(sampleObject)
-                    sampleObject.bsonObjectIdField
+                    sampleObject.objectIdField
                 }
             function(managedObjectId)
             cancelWrite() // So we can use .first()
@@ -139,15 +139,15 @@ class BsonObjectIdTests {
         Barq.open(config).use { barq ->
             val objWithPK1 = Sample().apply {
                 stringField = "obj1"
-                bsonObjectIdField = objectId1
+                objectIdField = objectId1
             }
             val objWithPK2 = Sample().apply {
                 stringField = "obj2"
-                bsonObjectIdField = objectId2
+                objectIdField = objectId2
             }
             val objWithPK3 = Sample().apply {
                 stringField = "obj3"
-                bsonObjectIdField = objectId3
+                objectIdField = objectId3
             }
 
             barq.writeBlocking {
@@ -157,17 +157,17 @@ class BsonObjectIdTests {
             }
 
             val ids: BarqResults<Sample> =
-                barq.query<Sample>().sort("bsonObjectIdField", Sort.ASCENDING).find()
+                barq.query<Sample>().sort("objectIdField", Sort.ASCENDING).find()
             assertEquals(3, ids.size)
 
             assertEquals("obj1", ids[0].stringField)
-            assertEquals(objectId1, ids[0].bsonObjectIdField)
+            assertEquals(objectId1, ids[0].objectIdField)
 
             assertEquals("obj2", ids[1].stringField)
-            assertEquals(objectId2, ids[1].bsonObjectIdField)
+            assertEquals(objectId2, ids[1].objectIdField)
 
             assertEquals("obj3", ids[2].stringField)
-            assertEquals(objectId3, ids[2].bsonObjectIdField)
+            assertEquals(objectId3, ids[2].objectIdField)
         }
     }
 }

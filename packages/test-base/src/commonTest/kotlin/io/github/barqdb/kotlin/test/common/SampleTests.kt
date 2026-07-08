@@ -31,7 +31,7 @@ import io.github.barqdb.kotlin.internal.barqObjectCompanionOrThrow
 import io.github.barqdb.kotlin.query.find
 import io.github.barqdb.kotlin.test.platform.PlatformUtils
 import io.github.barqdb.kotlin.types.BarqInstant
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -184,7 +184,7 @@ class SampleTests {
     @Test
     @Suppress("LongMethod")
     fun primitiveTypes() {
-        val oid = io.github.barqdb.kotlin.bson.ObjectId()
+        val oid = io.github.barqdb.kotlin.types.ObjectId()
         barq.writeBlocking {
             copyToBarq(Sample()).apply {
                 stringField = "Barq Kotlin"
@@ -198,7 +198,7 @@ class SampleTests {
                 doubleField = 1.19851106
                 decimal128Field = Decimal128("2.155544073709551618E-6157")
                 timestampField = BarqInstant.from(42, 420)
-                bsonObjectIdField = oid
+                objectIdField = oid
             }
         }
 
@@ -217,7 +217,7 @@ class SampleTests {
                 assertEquals(1.19851106, objects[0].doubleField)
                 assertEquals(Decimal128("2.155544073709551618E-6157"), objects[0].decimal128Field)
                 assertEquals(BarqInstant.from(42, 420), objects[0].timestampField)
-                assertEquals(oid, objects[0].bsonObjectIdField)
+                assertEquals(oid, objects[0].objectIdField)
             }
 
         // querying on each type

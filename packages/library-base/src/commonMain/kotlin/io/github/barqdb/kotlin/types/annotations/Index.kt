@@ -18,7 +18,7 @@ package io.github.barqdb.kotlin.types.annotations
 
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FIELD)
@@ -29,7 +29,7 @@ import io.github.barqdb.kotlin.bson.BsonObjectId
  * Multiple fields in a BarqObject class can have this annotation.
  *
  * This annotation applies to the following primitive types: [String], [Boolean], [Byte], [Char],
- * [Short], [Int], [Long], [BarqInstant], [ObjectId], [BsonObjectId], [BarqUUID] as well as their
+ * [Short], [Int], [Long], [BarqInstant], [ObjectId], [BarqUUID] as well as their
  * nullable variants.
  *
  * This annotation cannot be combined with [FullText].

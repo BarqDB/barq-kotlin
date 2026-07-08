@@ -52,8 +52,8 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -935,7 +935,7 @@ class CopyFromBarqTests {
                 BarqUUID::class -> BarqUUID.from("defda04c-80ac-4ed9-86f5-334fef3dcf8a")
                 MutableBarqInt::class -> MutableBarqInt.create(7)
                 BarqAny::class -> BarqAny.create(1)
-                BsonObjectId::class -> BsonObjectId("635a1a95184a200db8a07bfc")
+                ObjectId::class -> ObjectId("635a1a95184a200db8a07bfc")
                 Decimal128::class -> Decimal128("1.8446744073709551618E-615")
                 Sample::class -> null // Object references are not part of this test, so just return null
 
@@ -964,7 +964,7 @@ class CopyFromBarqTests {
             ByteArray::class -> barqListOf(byteArrayOf(42), byteArrayOf(43))
             BarqInstant::class -> barqListOf(BarqInstant.from(1, 0), BarqInstant.from(1, 1))
             BarqUUID::class -> barqListOf(BarqUUID.from("defda04c-80ac-4ed9-86f5-334fef3dcf8a"), BarqUUID.from("eefda04c-80ac-4ed9-86f5-334fef3dcf8a"))
-            BsonObjectId::class -> barqListOf(BsonObjectId("635a1a95184a200db8a07bfc"), BsonObjectId("735a1a95184a200db8a07bfc"))
+            ObjectId::class -> barqListOf(ObjectId("635a1a95184a200db8a07bfc"), ObjectId("735a1a95184a200db8a07bfc"))
             Decimal128::class -> barqListOf(Decimal128("1.8446744073709551618E-615"), Decimal128("2.8446744073709551618E-6151"))
             BarqAny::class -> barqListOf(BarqAny.create(1))
             Sample::class -> barqListOf() // Object references are not part of this test
@@ -996,7 +996,7 @@ class CopyFromBarqTests {
             ByteArray::class -> barqSetOf(byteArrayOf(42), byteArrayOf(43))
             BarqInstant::class -> barqSetOf(BarqInstant.from(1, 0), BarqInstant.from(1, 1))
             BarqUUID::class -> barqSetOf(BarqUUID.from("defda04c-80ac-4ed9-86f5-334fef3dcf8a"), BarqUUID.from("eefda04c-80ac-4ed9-86f5-334fef3dcf8a"))
-            BsonObjectId::class -> barqSetOf(BsonObjectId("635a1a95184a200db8a07bfc"), BsonObjectId("735a1a95184a200db8a07bfc"))
+            ObjectId::class -> barqSetOf(ObjectId("635a1a95184a200db8a07bfc"), ObjectId("735a1a95184a200db8a07bfc"))
             Decimal128::class -> barqSetOf(Decimal128("1.8446744073709551618E-615"), Decimal128("2.8446744073709551618E-6151"))
             BarqAny::class -> barqSetOf(BarqAny.create(1))
             Sample::class -> barqSetOf() // Object references are not part of this test
@@ -1030,7 +1030,7 @@ class CopyFromBarqTests {
             ByteArray::class -> barqDictionaryOf("A" to byteArrayOf(42), "B" to byteArrayOf(43))
             BarqInstant::class -> barqDictionaryOf("A" to BarqInstant.from(1, 0), "B" to BarqInstant.from(1, 1))
             BarqUUID::class -> barqDictionaryOf("A" to BarqUUID.from("defda04c-80ac-4ed9-86f5-334fef3dcf8a"), "B" to BarqUUID.from("eefda04c-80ac-4ed9-86f5-334fef3dcf8a"))
-            BsonObjectId::class -> barqDictionaryOf("A" to BsonObjectId("635a1a95184a200db8a07bfc"), "B" to BsonObjectId("735a1a95184a200db8a07bfc"))
+            ObjectId::class -> barqDictionaryOf("A" to ObjectId("635a1a95184a200db8a07bfc"), "B" to ObjectId("735a1a95184a200db8a07bfc"))
             Decimal128::class -> barqDictionaryOf("A" to Decimal128("1.8446744073709551618E-615"), "B" to Decimal128("2.8446744073709551618E-6151"))
             BarqAny::class -> barqDictionaryOf("A" to BarqAny.create(1))
             Sample::class -> barqDictionaryOf() // Object references are not part of this test

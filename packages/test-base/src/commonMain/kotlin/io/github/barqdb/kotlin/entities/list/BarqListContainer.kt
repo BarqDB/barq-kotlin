@@ -23,8 +23,8 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KMutableProperty1
 
 val listTestSchema = setOf(BarqListContainer::class, EmbeddedLevel1::class)
@@ -45,7 +45,7 @@ class BarqListContainer : BarqObject {
     var doubleListField: BarqList<Double> = barqListOf()
     var decimal128ListField: BarqList<Decimal128> = barqListOf()
     var timestampListField: BarqList<BarqInstant> = barqListOf()
-    var bsonObjectIdListField: BarqList<BsonObjectId> = barqListOf()
+    var objectIdListField: BarqList<ObjectId> = barqListOf()
     var uuidListField: BarqList<BarqUUID> = barqListOf()
     var binaryListField: BarqList<ByteArray> = barqListOf()
     var objectListField: BarqList<BarqListContainer> = barqListOf()
@@ -62,7 +62,7 @@ class BarqListContainer : BarqObject {
     var nullableDoubleListField: BarqList<Double?> = barqListOf()
     var nullableDecimal128Field: BarqList<Decimal128?> = barqListOf()
     var nullableTimestampListField: BarqList<BarqInstant?> = barqListOf()
-    var nullableBsonObjectIdListField: BarqList<BsonObjectId?> = barqListOf()
+    var nullableObjectIdListField: BarqList<ObjectId?> = barqListOf()
     var nullableUUIDListField: BarqList<BarqUUID?> = barqListOf()
     var nullableBinaryListField: BarqList<ByteArray?> = barqListOf()
     var nullableBarqAnyListField: BarqList<BarqAny?> = barqListOf()
@@ -82,7 +82,7 @@ class BarqListContainer : BarqObject {
             Double::class to BarqListContainer::doubleListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
             Decimal128::class to BarqListContainer::decimal128ListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
             BarqInstant::class to BarqListContainer::timestampListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
-            BsonObjectId::class to BarqListContainer::bsonObjectIdListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
+            ObjectId::class to BarqListContainer::objectIdListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
             BarqUUID::class to BarqListContainer::uuidListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
             ByteArray::class to BarqListContainer::binaryListField as KMutableProperty1<BarqListContainer, BarqList<Any>>,
             BarqObject::class to BarqListContainer::objectListField as KMutableProperty1<BarqListContainer, BarqList<Any>>
@@ -101,7 +101,7 @@ class BarqListContainer : BarqObject {
             Double::class to BarqListContainer::nullableDoubleListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
             Decimal128::class to BarqListContainer::nullableDecimal128Field as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
             BarqInstant::class to BarqListContainer::nullableTimestampListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
-            BsonObjectId::class to BarqListContainer::nullableBsonObjectIdListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
+            ObjectId::class to BarqListContainer::nullableObjectIdListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
             BarqUUID::class to BarqListContainer::nullableUUIDListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
             ByteArray::class to BarqListContainer::nullableBinaryListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>,
             BarqAny::class to BarqListContainer::nullableBarqAnyListField as KMutableProperty1<BarqListContainer, BarqList<Any?>>

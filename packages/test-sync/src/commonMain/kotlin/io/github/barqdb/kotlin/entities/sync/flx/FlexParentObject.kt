@@ -18,7 +18,7 @@ package io.github.barqdb.kotlin.entities.sync.flx
 
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 /**
  * Object used when testing Flexible Sync.

@@ -59,12 +59,12 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import io.github.barqdb.kotlin.bson.BsonValue
+import io.github.barqdb.kotlin.types.BarqValue
 
 @Suppress("LongParameterList")
 internal class SyncConfigurationImpl(
     private val configuration: InternalConfiguration,
-    internal val partitionValue: BsonValue?,
+    internal val partitionValue: BarqValue?,
     override val user: UserImpl,
     override val errorHandler: SyncSession.ErrorHandler,
     override val syncClientResetStrategy: SyncClientResetStrategy,

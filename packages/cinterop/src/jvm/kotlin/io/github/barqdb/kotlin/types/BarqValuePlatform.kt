@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Realm Inc.
+ * Copyright (c) 2026 the Barq authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.barqdb.kotlin.entities.sync
 
-import io.github.barqdb.kotlin.entities.Location
-import io.github.barqdb.kotlin.types.BarqObject
-import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.types.ObjectId
+package io.github.barqdb.kotlin.types
 
-class SyncRestaurant : BarqObject {
-    @PrimaryKey
-    @Suppress("VariableNaming")
-    var _id = ObjectId()
-    var section: ObjectId? = null
-    var location: Location? = null
-}
+internal actual fun barqCurrentTimeMillis(): Long = System.currentTimeMillis()

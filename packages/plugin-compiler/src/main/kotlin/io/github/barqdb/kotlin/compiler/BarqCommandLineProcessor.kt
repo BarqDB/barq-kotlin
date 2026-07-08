@@ -22,46 +22,18 @@ import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.config.CompilerConfigurationKey
-
-// Must match io.github.barqdb.kotlin.gradle.BarqCompilerSubplugin.bundleId
-const val BUNDLE_ID_KEY = "bundleId"
-const val FEATURE_LIST_PATH_KEY = "featureListPath"
-val bundleIdConfigurationKey: CompilerConfigurationKey<String> = CompilerConfigurationKey<String>("io.github.barqdb.kotlin.bundleId")
-val featureListPathConfigurationKey: CompilerConfigurationKey<String> = CompilerConfigurationKey<String>("io.github.barqdb.kotlin.featureListPath")
 
 @OptIn(ExperimentalCompilerApi::class)
 @AutoService(CommandLineProcessor::class)
 class BarqCommandLineProcessor : CommandLineProcessor {
     override val pluginId: String = "io.github.barqdb.kotlin"
-    override val pluginOptions: Collection<CliOption> = listOf(
-        CliOption(
-            optionName = "bundleId",
-            description = "Anonymized Bundle Id",
-            valueDescription = "Anonymized Bundle Id",
-            required = false,
-            allowMultipleOccurrences = false
-        ),
-        CliOption(
-            optionName = "featureListPath",
-            description = "Feature List Path",
-            valueDescription = "Feature List Path",
-            required = false,
-            allowMultipleOccurrences = false
-        ),
-    )
+    override val pluginOptions: Collection<CliOption> = emptyList()
 
     override fun processOption(
         option: AbstractCliOption,
         value: String,
         configuration: CompilerConfiguration
     ) {
-        when (option.optionName) {
-            BUNDLE_ID_KEY ->
-                configuration.put(bundleIdConfigurationKey, value)
-            FEATURE_LIST_PATH_KEY ->
-                configuration.put(featureListPathConfigurationKey, value)
-            else -> super.processOption(option, value, configuration)
-        }
+        super.processOption(option, value, configuration)
     }
 }

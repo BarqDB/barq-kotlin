@@ -7,20 +7,19 @@ import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.annotations.PersistedName
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 
 class DeviceParent : BarqObject {
     @PersistedName("_id")
     @PrimaryKey
-    var id: ObjectId = BsonObjectId()
+    var id: ObjectId = ObjectId()
     var device: Device? = null
 }
 
 class Measurement : AsymmetricBarqObject {
     @PersistedName("_id")
     @PrimaryKey
-    var id: ObjectId = BsonObjectId()
+    var id: ObjectId = ObjectId()
     var type: String = "temperature"
     var value: Float = 0.0f
     var device: Device? = null

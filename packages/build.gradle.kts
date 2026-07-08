@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import io.github.barqdb.kotlin.getPropertyValue
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -161,42 +160,6 @@ tasks.register("publishCIPackages") {
             }
             else -> {
                 throw IllegalArgumentException("Unsupported target: $target")
-            }
-        }
-    }
-}
-
-tasks.register("uploadDokka") {
-    dependsOn("dokkaHtmlMultiModule")
-    group = "Release"
-    description = "Upload SDK docs to S3"
-    doLast {
-        val awsAccessKey = getPropertyValue(this.project, "SDK_DOCS_AWS_ACCESS_KEY")
-        val awsSecretKey = getPropertyValue(this.project, "SDK_DOCS_AWS_SECRET_KEY")
-
-        // Failsafe check, ensuring that we catch if the path ever changes, which it might since it is an
-        // implementation detail of the Kotlin Gradle Plugin
-        val dokkaDir = File("$rootDir/build/dokka/htmlMultiModule/")
-        if (!dokkaDir.exists() || !dokkaDir.isDirectory || dokkaDir.listFiles().isEmpty()) {
-            throw GradleException("Could not locate dir with dokka files in: ${dokkaDir.path}")
-        }
-
-        // Upload two copies, to 'latest' and a versioned folder for posterity.
-        // Symlinks would have been safer and faster, but this is not supported by S3.
-        listOf(Barq.version, "latest").forEach { version: String ->
-            exec {
-                commandLine = listOf(
-                    "s3cmd",
-                    "put",
-                    "--no-mime-magic",
-                    "--guess-mime-type",
-                    "--recursive",
-                    "--acl-public",
-                    "--access_key=$awsAccessKey",
-                    "--secret_key=$awsSecretKey",
-                    "${dokkaDir.absolutePath}/", // Add / to only upload content of the folder, not the folder itself.
-                    "s3://barq-sdks/docs/barq-sdks/kotlin/$version/"
-                )
             }
         }
     }

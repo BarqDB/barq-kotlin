@@ -83,8 +83,7 @@ import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.ObjectId
+import io.github.barqdb.kotlin.types.ObjectId
 import platform.posix.memcpy
 import platform.posix.posix_errno
 import platform.posix.pthread_threadid_np
@@ -3102,7 +3101,7 @@ fun barq_value_t.asLink(): Link {
     return Link(ClassKey(this.link.target_table.toLong()), this.link.target)
 }
 
-private fun BsonObjectId.barq_object_id_t(): CValue<barq_object_id_t> {
+private fun ObjectId.barq_object_id_t(): CValue<barq_object_id_t> {
     return cValue {
         memScoped {
             this@barq_object_id_t.toByteArray().usePinned {

@@ -25,8 +25,8 @@ import io.github.barqdb.kotlin.types.MutableBarqInt
 import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KMutableProperty1
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -121,7 +121,7 @@ class NullabilityTests {
                 testProperty(Nullability::decimal128Field, Decimal128("123.456"))
                 testProperty(Nullability::objectField, null)
                 testProperty(Nullability::timestampField, BarqInstant.from(42, 420))
-                testProperty(Nullability::bsonObjectIdField, BsonObjectId("507f191e810c19729de860ea"))
+                testProperty(Nullability::objectIdField, ObjectId("507f191e810c19729de860ea"))
                 testProperty(Nullability::uuidField, BarqUUID.random())
                 testProperty(Nullability::binaryField, byteArrayOf(42))
                 testProperty(Nullability::mutableBarqIntField, MutableBarqInt.create(42))

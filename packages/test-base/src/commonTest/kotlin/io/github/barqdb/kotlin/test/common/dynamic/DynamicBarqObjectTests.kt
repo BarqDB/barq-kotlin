@@ -52,8 +52,8 @@ import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -248,7 +248,7 @@ class DynamicBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> {
                                 assertEquals(
                                     null,
-                                    dynamicSample.getNullableValue<BsonObjectId>(property.name)
+                                    dynamicSample.getNullableValue<ObjectId>(property.name)
                                 )
                                 assertEquals(
                                     null,
@@ -401,15 +401,15 @@ class DynamicBarqObjectTests {
                             }
                             BarqStorageType.OBJECT_ID -> {
                                 assertEquals(
-                                    expectedSample.bsonObjectIdField,
+                                    expectedSample.objectIdField,
                                     dynamicSample.getValue(property.name)
                                 )
                                 assertEquals(
-                                    expectedSample.bsonObjectIdField,
-                                    dynamicSample.getValue<BsonObjectId>(property.name)
+                                    expectedSample.objectIdField,
+                                    dynamicSample.getValue<ObjectId>(property.name)
                                 )
                                 assertEquals(
-                                    expectedSample.bsonObjectIdField,
+                                    expectedSample.objectIdField,
                                     dynamicSample.getValue(
                                         property.name,
                                         type.storageType.kClass
@@ -555,12 +555,12 @@ class DynamicBarqObjectTests {
                             }
                             BarqStorageType.OBJECT_ID -> {
                                 assertionsForNullable(
-                                    dynamicSample.getNullableValueList<BsonObjectId>(property.name)
+                                    dynamicSample.getNullableValueList<ObjectId>(property.name)
                                 )
                                 assertionsForNullable(
                                     dynamicSample.getNullableValueList(
                                         property.name,
-                                        BsonObjectId::class
+                                        ObjectId::class
                                     )
                                 )
                             }
@@ -699,16 +699,16 @@ class DynamicBarqObjectTests {
                                 )
                             }
                             BarqStorageType.OBJECT_ID -> {
-                                val expectedValue = defaultSample.bsonObjectIdField
+                                val expectedValue = defaultSample.objectIdField
                                 assertEquals(
                                     expectedValue,
-                                    dynamicSample.getValueList<BsonObjectId>(property.name)[0]
+                                    dynamicSample.getValueList<ObjectId>(property.name)[0]
                                 )
                                 assertEquals(
                                     expectedValue,
                                     dynamicSample.getValueList(
                                         property.name,
-                                        BsonObjectId::class
+                                        ObjectId::class
                                     )[0]
                                 )
                             }
@@ -814,14 +814,14 @@ class DynamicBarqObjectTests {
                             }
                             BarqStorageType.OBJECT_ID -> {
                                 assertionsForNullable(
-                                    dynamicSample.getNullableValueSet<BsonObjectId>(
+                                    dynamicSample.getNullableValueSet<ObjectId>(
                                         property.name
                                     )
                                 )
                                 assertionsForNullable(
                                     dynamicSample.getNullableValueSet(
                                         property.name,
-                                        BsonObjectId::class
+                                        ObjectId::class
                                     )
                                 )
                             }
@@ -970,11 +970,11 @@ class DynamicBarqObjectTests {
                             BarqStorageType.OBJECT_ID -> {
                                 assertionsForValue(
                                     dynamicSample.getValueSet(property.name),
-                                    defaultSample.bsonObjectIdField
+                                    defaultSample.objectIdField
                                 )
                                 assertionsForValue(
-                                    dynamicSample.getValueSet(property.name, BsonObjectId::class),
-                                    defaultSample.bsonObjectIdField
+                                    dynamicSample.getValueSet(property.name, ObjectId::class),
+                                    defaultSample.objectIdField
                                 )
                             }
                             BarqStorageType.UUID -> {
@@ -1156,14 +1156,14 @@ class DynamicBarqObjectTests {
                             }
                             BarqStorageType.OBJECT_ID -> {
                                 assertionsForNullable(
-                                    dynamicSample.getNullableValueDictionary<BsonObjectId>(
+                                    dynamicSample.getNullableValueDictionary<ObjectId>(
                                         property.name
                                     )
                                 )
                                 assertionsForNullable(
                                     dynamicSample.getNullableValueDictionary(
                                         property.name,
-                                        BsonObjectId::class
+                                        ObjectId::class
                                     )
                                 )
                             }
@@ -1256,7 +1256,7 @@ class DynamicBarqObjectTests {
                             )
                             BarqStorageType.OBJECT_ID -> assertionsForValue(
                                 dynamicSample.getValueDictionary(property.name),
-                                defaultSample.bsonObjectIdField
+                                defaultSample.objectIdField
                             )
                             BarqStorageType.UUID -> assertionsForValue(
                                 dynamicSample.getValueDictionary(property.name),
@@ -1881,7 +1881,7 @@ class DynamicBarqObjectTests {
             stringListField.add(defaultSample.stringField)
             objectListField.add(this)
             timestampListField.add(defaultSample.timestampField)
-            bsonObjectIdListField.add(defaultSample.bsonObjectIdField)
+            objectIdListField.add(defaultSample.objectIdField)
             uuidListField.add(defaultSample.uuidField)
             binaryListField.add(defaultSample.binaryField)
             decimal128ListField.add(defaultSample.decimal128Field)
@@ -1897,7 +1897,7 @@ class DynamicBarqObjectTests {
             stringSetField.add(defaultSample.stringField)
             objectSetField.add(this)
             timestampSetField.add(defaultSample.timestampField)
-            bsonObjectIdSetField.add(defaultSample.bsonObjectIdField)
+            objectIdSetField.add(defaultSample.objectIdField)
             uuidSetField.add(defaultSample.uuidField)
             binarySetField.add(defaultSample.binaryField)
             decimal128SetField.add(defaultSample.decimal128Field)
@@ -1912,7 +1912,7 @@ class DynamicBarqObjectTests {
             doubleDictionaryField["A"] = defaultSample.doubleField
             stringDictionaryField["A"] = defaultSample.stringField
             timestampDictionaryField["A"] = defaultSample.timestampField
-            bsonObjectIdDictionaryField["A"] = defaultSample.bsonObjectIdField
+            objectIdDictionaryField["A"] = defaultSample.objectIdField
             uuidDictionaryField["A"] = defaultSample.uuidField
             binaryDictionaryField["A"] = defaultSample.binaryField
             decimal128DictionaryField["A"] = defaultSample.decimal128Field
@@ -1927,7 +1927,7 @@ class DynamicBarqObjectTests {
             nullableFloatListField.add(null)
             nullableDoubleListField.add(null)
             nullableTimestampListField.add(null)
-            nullableBsonObjectIdListField.add(null)
+            nullableObjectIdListField.add(null)
             nullableUUIDListField.add(null)
             nullableBinaryListField.add(null)
             nullableDecimal128ListField.add(null)
@@ -1942,7 +1942,7 @@ class DynamicBarqObjectTests {
             nullableFloatSetField.add(null)
             nullableDoubleSetField.add(null)
             nullableTimestampSetField.add(null)
-            nullableBsonObjectIdSetField.add(null)
+            nullableObjectIdSetField.add(null)
             nullableUUIDSetField.add(null)
             nullableBinarySetField.add(null)
             nullableDecimal128SetField.add(null)
@@ -1957,7 +1957,7 @@ class DynamicBarqObjectTests {
             nullableFloatDictionaryField["A"] = null
             nullableDoubleDictionaryField["A"] = null
             nullableTimestampDictionaryField["A"] = null
-            nullableBsonObjectIdDictionaryField["A"] = null
+            nullableObjectIdDictionaryField["A"] = null
             nullableUUIDDictionaryField["A"] = null
             nullableBinaryDictionaryField["A"] = null
             nullableDecimal128DictionaryField["A"] = null

@@ -23,8 +23,8 @@ import io.github.barqdb.kotlin.types.BarqAny
 import io.github.barqdb.kotlin.types.BarqInstant
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqUUID
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KMutableProperty1
@@ -285,7 +285,7 @@ object TypeDescriptor {
         Boolean::class to CoreFieldType.BOOL,
         String::class to CoreFieldType.STRING,
         BarqInstant::class to CoreFieldType.TIMESTAMP,
-        BsonObjectId::class to CoreFieldType.OBJECT_ID,
+        ObjectId::class to CoreFieldType.OBJECT_ID,
         BarqUUID::class to CoreFieldType.UUID,
         ByteArray::class to CoreFieldType.BINARY,
         MutableBarqInt::class to CoreFieldType.MUTABLE_BARQ_INT,

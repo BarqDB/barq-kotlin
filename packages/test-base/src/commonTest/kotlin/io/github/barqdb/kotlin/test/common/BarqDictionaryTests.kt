@@ -49,8 +49,8 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withTimeout
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KMutableProperty1
 import kotlin.test.AfterTest
@@ -1418,12 +1418,12 @@ fun <T> getDataSetForDictionaryClassifier(
     } else {
         TIMESTAMP_VALUES.mapIndexed { i, value -> Pair(DICTIONARY_KEYS[i], value) }
     }
-    BsonObjectId::class -> if (nullable) {
-        NULLABLE_BSON_OBJECT_ID_VALUES.mapIndexed { i, value ->
+    ObjectId::class -> if (nullable) {
+        NULLABLE_OBJECT_ID_VALUES.mapIndexed { i, value ->
             Pair(DICTIONARY_KEYS_FOR_NULLABLE[i], value)
         }
     } else {
-        BSON_OBJECT_ID_VALUES.mapIndexed { i, value -> Pair(DICTIONARY_KEYS[i], value) }
+        OBJECT_ID_VALUES.mapIndexed { i, value -> Pair(DICTIONARY_KEYS[i], value) }
     }
     BarqUUID::class -> if (nullable) {
         NULLABLE_UUID_VALUES.mapIndexed { i, value -> Pair(DICTIONARY_KEYS_FOR_NULLABLE[i], value) }

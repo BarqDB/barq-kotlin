@@ -48,8 +48,8 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withTimeout
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KMutableProperty1
 import kotlin.test.AfterTest
@@ -692,7 +692,7 @@ fun <T> getDataSetForCollectionClassifier(
     Decimal128::class -> if (nullable) NULLABLE_DECIMAL128_VALUES else DECIMAL128_VALUES
     String::class -> if (nullable) NULLABLE_STRING_VALUES else STRING_VALUES
     BarqInstant::class -> if (nullable) NULLABLE_TIMESTAMP_VALUES else TIMESTAMP_VALUES
-    BsonObjectId::class -> if (nullable) NULLABLE_BSON_OBJECT_ID_VALUES else BSON_OBJECT_ID_VALUES
+    ObjectId::class -> if (nullable) NULLABLE_OBJECT_ID_VALUES else OBJECT_ID_VALUES
     BarqUUID::class -> if (nullable) NULLABLE_UUID_VALUES else UUID_VALUES
     ByteArray::class -> if (nullable) NULLABLE_BINARY_VALUES else BINARY_VALUES
     BarqObject::class -> barqObjects // Don't use the one from BarqListTests!!!

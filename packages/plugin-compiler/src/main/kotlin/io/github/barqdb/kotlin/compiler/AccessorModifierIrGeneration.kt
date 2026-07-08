@@ -21,8 +21,8 @@ package io.github.barqdb.kotlin.compiler
 import io.github.barqdb.kotlin.compiler.ClassIds.ASYMMETRIC_OBJECT_INTERFACE
 import io.github.barqdb.kotlin.compiler.ClassIds.EMBEDDED_OBJECT_INTERFACE
 import io.github.barqdb.kotlin.compiler.ClassIds.IGNORE_ANNOTATION
-import io.github.barqdb.kotlin.compiler.ClassIds.BSON_DECIMAL128
-import io.github.barqdb.kotlin.compiler.ClassIds.BSON_OBJECT_ID
+import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_DECIMAL128
+import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_OBJECT_ID
 import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_ANY
 import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_BACKLINKS
 import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_DICTIONARY
@@ -134,8 +134,8 @@ class AccessorModifierIrGeneration(private val pluginContext: IrPluginContext) {
     private val barqObjectInterface = pluginContext.lookupClassOrThrow(BARQ_OBJECT_INTERFACE).symbol
     private val embeddedBarqObjectInterface = pluginContext.lookupClassOrThrow(EMBEDDED_OBJECT_INTERFACE).symbol
 
-    private val objectIdClass: IrClass = pluginContext.lookupClassOrThrow(BSON_OBJECT_ID)
-    private val decimal128Class: IrClass = pluginContext.lookupClassOrThrow(BSON_DECIMAL128)
+    private val objectIdClass: IrClass = pluginContext.lookupClassOrThrow(BARQ_OBJECT_ID)
+    private val decimal128Class: IrClass = pluginContext.lookupClassOrThrow(BARQ_DECIMAL128)
     private val barqUUIDClass: IrClass = pluginContext.lookupClassOrThrow(BARQ_UUID)
     private val mutableBarqIntegerClass: IrClass = pluginContext.lookupClassOrThrow(BARQ_MUTABLE_INTEGER)
     private val barqAnyClass: IrClass = pluginContext.lookupClassOrThrow(BARQ_ANY)
@@ -1110,8 +1110,9 @@ class AccessorModifierIrGeneration(private val pluginContext: IrPluginContext) {
                     "String" -> PropertyType.BARQ_PROPERTY_TYPE_STRING
                     "BarqInstant" -> PropertyType.BARQ_PROPERTY_TYPE_TIMESTAMP
                     "ObjectId" -> PropertyType.BARQ_PROPERTY_TYPE_OBJECT_ID
-                    "BsonObjectId" -> PropertyType.BARQ_PROPERTY_TYPE_OBJECT_ID
-                    "BsonDecimal128" -> PropertyType.BARQ_PROPERTY_TYPE_DECIMAL128
+                    "BarqObjectId" -> PropertyType.BARQ_PROPERTY_TYPE_OBJECT_ID
+                    "Decimal128" -> PropertyType.BARQ_PROPERTY_TYPE_DECIMAL128
+                    "BarqDecimal128" -> PropertyType.BARQ_PROPERTY_TYPE_DECIMAL128
                     "BarqUUID" -> PropertyType.BARQ_PROPERTY_TYPE_UUID
                     "ByteArray" -> PropertyType.BARQ_PROPERTY_TYPE_BINARY
                     "BarqAny" -> PropertyType.BARQ_PROPERTY_TYPE_MIXED

@@ -65,8 +65,8 @@ import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.BarqUUID
 import io.github.barqdb.kotlin.types.TypedBarqObject
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -207,7 +207,7 @@ internal object BarqObjectHelper {
                 is Float -> setValueTransportByKey(obj, key, floatTransport(value))
                 is Double -> setValueTransportByKey(obj, key, doubleTransport(value))
                 is Decimal128 -> setValueTransportByKey(obj, key, decimal128Transport(value))
-                is BsonObjectId -> setValueTransportByKey(
+                is ObjectId -> setValueTransportByKey(
                     obj,
                     key,
                     objectIdTransport(value.toByteArray())
@@ -295,7 +295,7 @@ internal object BarqObjectHelper {
     internal inline fun getObjectId(
         obj: BarqObjectReference<out BaseBarqObject>,
         propertyName: String
-    ): BsonObjectId? = getterScope { getBarqValue(obj, propertyName)?.let { barqValueToObjectId(it) } }
+    ): ObjectId? = getterScope { getBarqValue(obj, propertyName)?.let { barqValueToObjectId(it) } }
 
     internal inline fun getUUID(
         obj: BarqObjectReference<out BaseBarqObject>,

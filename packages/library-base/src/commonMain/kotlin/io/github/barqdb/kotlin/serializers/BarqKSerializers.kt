@@ -19,7 +19,7 @@ import io.github.barqdb.kotlin.ext.asBarqObject
 import io.github.barqdb.kotlin.ext.toBarqDictionary
 import io.github.barqdb.kotlin.ext.toBarqList
 import io.github.barqdb.kotlin.ext.toBarqSet
-import io.github.barqdb.kotlin.internal.asBsonDateTime
+import io.github.barqdb.kotlin.internal.asBarqDateTime
 import io.github.barqdb.kotlin.internal.asBarqInstant
 import io.github.barqdb.kotlin.types.MutableBarqInt
 import io.github.barqdb.kotlin.types.BarqAny
@@ -41,11 +41,11 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
-import io.github.barqdb.kotlin.bson.BsonBinary
-import io.github.barqdb.kotlin.bson.BsonBinarySubType
-import io.github.barqdb.kotlin.bson.BsonDateTime
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.BarqBinary
+import io.github.barqdb.kotlin.types.BarqBinarySubType
+import io.github.barqdb.kotlin.types.BarqDateTime
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 
 /**
  * KSerializer implementation for [BarqList]. Serialization is done as a generic list structure,
@@ -206,10 +206,10 @@ public class BarqDictionaryKSerializer<E>(elementSerializer: KSerializer<E>) :
 }
 
 /**
- * KSerializer implementation for [BarqInstant]. It is serialized as a [BsonDateTime], to allow direct
+ * KSerializer implementation for [BarqInstant]. It is serialized as a [BarqDateTime], to allow direct
  * usage on Mongodb function calls, and deserialized as an unmanaged [BarqInstant].
  *
- * Warning: because [BarqInstant] and [BsonDateTime] have different precision the serialization will
+ * Warning: because [BarqInstant] and [BarqDateTime] have different precision the serialization will
  * lose precision as nanoseconds get truncated to milliseconds.
  *
  * The serializer must be registered per property:
@@ -245,7 +245,7 @@ public class BarqDictionaryKSerializer<E>(elementSerializer: KSerializer<E>) :
  * Serializers for all Barq data types can be found in [io.github.barqdb.kotlin.serializers].
  */
 public object BarqInstantKSerializer : KSerializer<BarqInstant> {
-    private val serializer = BsonDateTime.serializer()
+    private val serializer = BarqDateTime.serializer()
     override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun deserialize(decoder: Decoder): BarqInstant =
@@ -254,7 +254,7 @@ public object BarqInstantKSerializer : KSerializer<BarqInstant> {
     override fun serialize(encoder: Encoder, value: BarqInstant) {
         encoder.encodeSerializableValue(
             serializer = serializer,
-            value = value.asBsonDateTime()
+            value = value.asBarqDateTime()
         )
     }
 }
@@ -346,7 +346,7 @@ public object BarqAnyKSerializer : KSerializer<BarqAny> {
         var float: Float? = null
         var double: Double? = null
         var decimal128: Decimal128? = null
-        var objectId: BsonObjectId? = null
+        var objectId: ObjectId? = null
 
         @Serializable(BarqUUIDKSerializer::class)
         var uuid: BarqUUID? = null
@@ -399,7 +399,7 @@ public object BarqAnyKSerializer : KSerializer<BarqAny> {
                     Type.FLOAT -> float = value.asFloat()
                     Type.DOUBLE -> double = value.asDouble()
                     Type.DECIMAL128 -> decimal128 = value.asDecimal128()
-                    Type.OBJECT_ID -> objectId = BsonObjectId(
+                    Type.OBJECT_ID -> objectId = ObjectId(
                         value.asObjectId().toByteArray()
                     )
                     Type.UUID -> uuid = value.asBarqUUID()
@@ -413,8 +413,8 @@ public object BarqAnyKSerializer : KSerializer<BarqAny> {
 }
 
 /**
- * KSerializer implementation for [BarqUUID]. Serialized as a [BsonBinary] with subtype
- * [BsonBinarySubType.UUID_STANDARD], and deserialized as an unmanaged [BarqUUID].
+ * KSerializer implementation for [BarqUUID]. Serialized as a [BarqBinary] with subtype
+ * [BarqBinarySubType.UUID_STANDARD], and deserialized as an unmanaged [BarqUUID].
  *
  * The serializer must be registered per property:
  * ```
@@ -449,7 +449,7 @@ public object BarqAnyKSerializer : KSerializer<BarqAny> {
  * Serializers for all Barq data types can be found in [io.github.barqdb.kotlin.serializers].
  */
 public object BarqUUIDKSerializer : KSerializer<BarqUUID> {
-    private val serializer = BsonBinary.serializer()
+    private val serializer = BarqBinary.serializer()
     override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun deserialize(decoder: Decoder): BarqUUID =
@@ -458,7 +458,7 @@ public object BarqUUIDKSerializer : KSerializer<BarqUUID> {
     override fun serialize(encoder: Encoder, value: BarqUUID) {
         encoder.encodeSerializableValue(
             serializer = serializer,
-            value = BsonBinary(BsonBinarySubType.UUID_STANDARD, value.bytes)
+            value = BarqBinary(BarqBinarySubType.UUID_STANDARD, value.bytes)
         )
     }
 }

@@ -62,7 +62,7 @@ val HOST_OS: OperatingSystem = findHostOs()
 
 object Barq {
     val ciBuild = (System.getenv("CI") != null)
-    const val version = "3.0.0-SNAPSHOT"
+    const val version = "4.0.0"
     const val group = "io.github.barqdb.kotlin"
     const val projectUrl = "https://github.com/BarqDB/barq-kotlin"
     const val pluginPortalId = "io.github.barqdb.kotlin"
@@ -129,7 +129,6 @@ object Versions {
     const val ktlint = "0.45.2" // https://github.com/pinterest/ktlint
     const val ktor = "2.3.12" // https://github.com/ktorio/ktor
     const val multidex = "2.0.1" // https://developer.android.com/jetpack/androidx/releases/multidex
-    const val nexusPublishPlugin = "1.3.0" // https://github.com/gradle-nexus/publish-plugin
     const val okio = "3.9.0" // https://square.github.io/okio/#releases
     const val relinker = "1.4.5" // https://github.com/KeepSafe/ReLinker
     const val serialization = "1.7.1" // https://kotlinlang.org/docs/releases.html#release-details

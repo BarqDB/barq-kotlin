@@ -24,8 +24,8 @@ import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
 import io.github.barqdb.kotlin.types.BarqSet
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-import io.github.barqdb.kotlin.bson.BsonObjectId
-import io.github.barqdb.kotlin.bson.Decimal128
+import io.github.barqdb.kotlin.types.ObjectId
+import io.github.barqdb.kotlin.types.Decimal128
 
 @Suppress("MagicNumber")
 class SampleWithPrimaryKey : BarqObject {
@@ -67,7 +67,7 @@ class SampleWithPrimaryKey : BarqObject {
     var floatListField: BarqList<Float> = barqListOf()
     var doubleListField: BarqList<Double> = barqListOf()
     var timestampListField: BarqList<BarqInstant> = barqListOf()
-    var bsonObjectIdListField: BarqList<BsonObjectId> = barqListOf()
+    var objectIdListField: BarqList<ObjectId> = barqListOf()
     var binaryListField: BarqList<ByteArray> = barqListOf()
     var objectListField: BarqList<SampleWithPrimaryKey> = barqListOf()
 
@@ -81,7 +81,7 @@ class SampleWithPrimaryKey : BarqObject {
     var nullableFloatListField: BarqList<Float?> = barqListOf()
     var nullableDoubleListField: BarqList<Double?> = barqListOf()
     var nullableTimestampListField: BarqList<BarqInstant?> = barqListOf()
-    var nullableBsonObjectIdListField: BarqList<BsonObjectId?> = barqListOf()
+    var nullableObjectIdListField: BarqList<ObjectId?> = barqListOf()
     var nullableBinaryListField: BarqList<ByteArray?> = barqListOf()
 
     var stringSetField: BarqSet<String> = barqSetOf()
@@ -94,7 +94,7 @@ class SampleWithPrimaryKey : BarqObject {
     var floatSetField: BarqSet<Float> = barqSetOf()
     var doubleSetField: BarqSet<Double> = barqSetOf()
     var timestampSetField: BarqSet<BarqInstant> = barqSetOf()
-    var bsonObjectIdSetField: BarqSet<BsonObjectId> = barqSetOf()
+    var objectIdSetField: BarqSet<ObjectId> = barqSetOf()
     var binarySetField: BarqSet<ByteArray> = barqSetOf()
     var objectSetField: BarqSet<SampleWithPrimaryKey> = barqSetOf()
 
@@ -108,7 +108,7 @@ class SampleWithPrimaryKey : BarqObject {
     var nullableFloatSetField: BarqSet<Float?> = barqSetOf()
     var nullableDoubleSetField: BarqSet<Double?> = barqSetOf()
     var nullableTimestampSetField: BarqSet<BarqInstant?> = barqSetOf()
-    var nullableBsonObjectIdSetField: BarqSet<BsonObjectId?> = barqSetOf()
+    var nullableObjectIdSetField: BarqSet<ObjectId?> = barqSetOf()
     var nullableBinarySetField: BarqSet<ByteArray?> = barqSetOf()
 
     // For verification that references inside class is also using our modified accessors and are
