@@ -1,0 +1,94 @@
+# Copyright (c) 2026 the Barq authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Builds the JVM native engine (libbarqc) for Linux and Windows and uploads each
+# as an artifact. macOS is built by the publish job itself (it already runs on a mac
+# runner). The publish workflow consumes these via `workflow_call` so the published
+# JVM fat jar carries jni/{macos,linux,windows} and runs on all three desktop JVMs.
+name: Build JVM native libs
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  # TEMPORARY (Phase 1 dry-run): auto-run on the feature branch. Remove before merge.
+  push:
+    branches:
+      - ci/multi-os-jvm-native
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            platform: linux
+            artifact: jni-linux
+            lib_path: packages/cinterop/build/barqLinuxBuild/libbarqc.so
+          - os: windows-latest
+            platform: windows
+            artifact: jni-windows
+            lib_path: packages/cinterop/build/barqWindowsBuild/Release/barqc.dll
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # Linux: cmake/ninja/gcc are preinstalled on the runner (newer than apt's 3.22.1,
+      # and single-arch so no macOS universal-binary cmake constraint applies). We only
+      # need swig (for the JNI wrapper) and system zlib headers (core's find_package(ZLIB)).
+      - name: Install build tools (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y swig zlib1g-dev
+
+      # Windows: cmake + MSVC (VS 2022) are preinstalled; only swig is missing.
+      - name: Install build tools (Windows)
+        if: runner.os == 'Windows'
+        run: choco install swig --yes --no-progress
+
+      # buildJVMSharedLibs does not depend on the swig task, so generate the JNI
+      # wrapper (barqc.cpp) explicitly first — the src/jvm CMakeLists consumes it.
+      - name: Generate SWIG JNI stubs
+        working-directory: packages
+        shell: bash
+        run: ./gradlew --no-daemon --console=plain :jni-swig-stub:barqWrapperJvm
+
+      - name: Build JVM native library
+        working-directory: packages
+        shell: bash
+        run: ./gradlew --no-daemon --console=plain :cinterop:buildJVMSharedLibs
+
+      - name: Upload native lib
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.lib_path }}
+          if-no-files-found: error
+          retention-days: 7

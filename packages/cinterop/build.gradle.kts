@@ -427,7 +427,8 @@ val buildJVMSharedLibs: TaskProvider<Task> by tasks.registering {
     } else if (HOST_OS.isWindows()) {
         buildSharedLibrariesForJVMWindows()
     } else {
-        throw IllegalStateException("Building JVM libraries on this platform is not supported: $HOST_OS")
+        // The only remaining host is Linux (findHostOs() throws on anything unknown).
+        buildSharedLibrariesForJVMLinux()
     }
 }
 
@@ -572,6 +573,41 @@ fun Task.buildSharedLibrariesForJVMWindows() {
 
     inputs.dir(project.file("$absoluteCorePath/src"))
     outputs.file(project.file("$jvmJniPath/windows/barqc.dll"))
+}
+
+fun Task.buildSharedLibrariesForJVMLinux() {
+    group = "Build"
+    description = "Compile dynamic libraries loaded by the JVM fat jar for supported platforms."
+    val directory = "$buildDir/barqLinuxBuild"
+
+    doLast {
+        exec {
+            commandLine("mkdir", "-p", directory)
+        }
+        exec {
+            workingDir(project.file(directory))
+            commandLine(
+                "cmake",
+                *getSharedCMakeFlags(BuildType.RELEASE, ccache = false),
+                project.file("src/jvm/")
+            )
+        }
+        exec {
+            workingDir(project.file(directory))
+            commandLine("cmake", "--build", ".", "-j8")
+        }
+
+        // copy files (linux)
+        exec {
+            commandLine("mkdir", "-p", project.file("$jvmJniPath/linux"))
+        }
+        File("$directory/libbarqc.so")
+            .copyTo(project.file("$jvmJniPath/linux/libbarqc.so"), overwrite = true)
+    }
+
+    inputs.dir(project.file("src/jvm"))
+    inputs.dir(project.file("$absoluteCorePath/src"))
+    outputs.file(project.file("$jvmJniPath/linux/libbarqc.so"))
 }
 
 fun Task.build_C_API_Macos_Universal(buildVariant: BuildType) {
