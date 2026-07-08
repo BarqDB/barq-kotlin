@@ -53,6 +53,9 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Install native build tools
+        run: brew install swig ccache
+
       - name: Validate release tag
         run: |
           set -euo pipefail
