@@ -73,6 +73,13 @@ jobs:
         if: runner.os == 'Windows'
         run: choco install swig --yes --no-progress
 
+      # Configuring :cinterop sets up the Android target's externalNativeBuild, which
+      # requires the pinned SDK CMake 3.22.1. windows-latest ships 4.1.2, so without this
+      # configuration aborts with [CXX1300] before any task runs. (ubuntu already ships 3.22.1.)
+      - name: Install Android SDK CMake 3.22.1 (Windows)
+        if: runner.os == 'Windows'
+        run: echo y | & "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" "cmake;3.22.1"
+
       # buildJVMSharedLibs does not depend on the swig task, so generate the JNI
       # wrapper (barqc.cpp) explicitly first — the src/jvm CMakeLists consumes it.
       - name: Generate SWIG JNI stubs
