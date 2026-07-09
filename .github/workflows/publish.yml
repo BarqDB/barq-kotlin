@@ -19,6 +19,9 @@ on:
   push:
     tags:
       - "v*"
+  # Rehearse the full multi-OS assembly without publishing: a manual run builds and
+  # verifies the fat jar but skips the Maven Central upload (guarded on event_name).
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -28,8 +31,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Build the Linux + Windows JVM engines on their own runners (macOS is built in-job below).
+  native:
+    name: Native JVM libs
+    uses: ./.github/workflows/build-jvm-native.yml
+
   maven-central:
     name: Maven Central
+    needs: native
     runs-on: macos-14
     timeout-minutes: 360
     env:
@@ -70,6 +79,7 @@ jobs:
           echo "/tmp/cmake-3.26.4-macos-universal/CMake.app/Contents/bin" >> "$GITHUB_PATH"
 
       - name: Validate release tag
+        if: github.event_name == 'push'
         run: |
           set -euo pipefail
           version="$(sed -n 's/.*const val version = "\([^"]*\)".*/\1/p' buildSrc/src/main/kotlin/Config.kt)"
@@ -83,22 +93,52 @@ jobs:
           test -n "${ORG_GRADLE_PROJECT_signSecretRingFileKotlin}"
           test -n "${ORG_GRADLE_PROJECT_signPasswordKotlin}"
 
+      # Pull the Linux/Windows engines built by the `native` job into the paths that
+      # copyJVMSharedLibs reads. No `clean` after this point (it would wipe them; the
+      # runner is fresh anyway). The macOS dylib is still built in-job by buildJVMSharedLibs.
+      - name: Download native JVM engine (Linux)
+        uses: actions/download-artifact@v4
+        with:
+          name: jni-linux
+          path: packages/cinterop/build/barqLinuxBuild
+
+      - name: Download native JVM engine (Windows)
+        uses: actions/download-artifact@v4
+        with:
+          name: jni-windows
+          path: packages/cinterop/build/barqWindowsBuild/Release
+
       - name: Build signed Maven artifacts
         working-directory: packages
         run: |
-          ./gradlew --console=plain --no-daemon clean publishCIPackages \
+          ./gradlew --console=plain --no-daemon publishCIPackages \
             -PgeneratePluginArtifactMarker=true \
             -Pbarq.kotlin.mainHost=true \
+            -Pbarq.kotlin.copyNativeJvmLibs=linux,windows \
             -Pbarq.kotlin.targets=iosArm64,iosX64,jvm,macosX64,macosArm64,android,compilerPlugin,gradlePlugin
 
+      # Fail before upload if the fat jar is missing any engine — never publish a
+      # jar that only works on one OS.
+      - name: Verify JVM fat jar bundles macOS + Linux + Windows engines
+        run: |
+          set -euo pipefail
+          jar="$(find packages -name 'library-base-jvm-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' | head -1)"
+          test -n "$jar" || { echo "library-base-jvm jar not found"; exit 1; }
+          echo "Inspecting: $jar"
+          for p in jni/macos/libbarqc.dylib jni/linux/libbarqc.so jni/windows/barqc.dll; do
+            unzip -l "$jar" | grep -q "$p" || { echo "MISSING native engine: $p"; exit 1; }
+            echo "  ok: $p"
+          done
+
       - name: Upload and release to Maven Central
+        if: github.event_name == 'push'
         run: |
           ./.github/scripts/upload-maven-central.sh \
             packages/build/m2-buildrepo \
             "barq-kotlin-${GITHUB_REF_NAME}"
 
       - name: Publish Gradle plugin to Plugin Portal
-        if: ${{ env.GRADLE_PUBLISH_KEY != '' && env.GRADLE_PUBLISH_SECRET != '' }}
+        if: ${{ github.event_name == 'push' && env.GRADLE_PUBLISH_KEY != '' && env.GRADLE_PUBLISH_SECRET != '' }}
         working-directory: packages
         run: |
           ./gradlew --console=plain --no-daemon :gradle-plugin:publishPlugins \

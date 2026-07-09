@@ -92,6 +92,14 @@ jobs:
         shell: bash
         run: ./gradlew --no-daemon --console=plain :cinterop:buildJVMSharedLibs
 
+      # Gate: run a focused JVM test that opens a Barq, which loads the freshly built
+      # engine via SoLoader + JNI_OnLoad on THIS OS. If the engine won't load here, the
+      # job fails, `needs: native` fails, and nothing publishes.
+      - name: Smoke test — open a Barq on this OS
+        working-directory: packages
+        shell: bash
+        run: ./gradlew --no-daemon --console=plain :test-base:jvmTest --tests "*BarqConfigurationTests"
+
       - name: Upload native lib
         uses: actions/upload-artifact@v4
         with:
