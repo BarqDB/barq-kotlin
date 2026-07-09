@@ -22,10 +22,6 @@ name: Build JVM native libs
 on:
   workflow_dispatch:
   workflow_call:
-  # TEMPORARY (Phase 1 dry-run): auto-run on the feature branch. Remove before merge.
-  push:
-    branches:
-      - ci/multi-os-jvm-native
 
 permissions:
   contents: read
