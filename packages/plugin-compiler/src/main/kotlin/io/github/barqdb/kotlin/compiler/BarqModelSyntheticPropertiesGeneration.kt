@@ -827,7 +827,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
         property.backingField?.parent = this
         property.backingField?.correspondingPropertySymbol = property.symbol
 
-        // FUN DEFAULT _PROPERTY_ACCESSOR name:<get-objectPointer> visibility:public modality:OPEN <> ($this:dev.nhachicha.Foo.$BarqHandler) returnType:kotlin.Long?
+        // FUN DEFAULT _PROPERTY_ACCESSOR name:<get-objectPointer> visibility:public modality:OPEN <> ($this:com.example.Foo.$BarqHandler) returnType:kotlin.Long?
         // correspondingProperty: PROPERTY name:objectPointer visibility:public modality:OPEN [var]
         val getter = property.addGetter {
             at(this@addInternalVarProperty.startOffset, this@addInternalVarProperty.endOffset)
@@ -835,18 +835,18 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
             modality = Modality.OPEN
             returnType = propertyType
         }
-        // $this: VALUE_PARAMETER name:<this> type:dev.nhachicha.Foo.$BarqHandler
+        // $this: VALUE_PARAMETER name:<this> type:com.example.Foo.$BarqHandler
         getter.dispatchReceiverParameter = thisReceiver!!.copyTo(getter)
         // overridden:
-        //   public abstract fun <get-barqPointer> (): kotlin.Long? declared in dev.nhachicha.BarqObjectInternal
+        //   public abstract fun <get-barqPointer> (): kotlin.Long? declared in com.example.BarqObjectInternal
         val propertyAccessorGetter = owner.getPropertyGetter(propertyName.asString())
             ?: fatalError("${propertyName.asString()} function getter symbol is not available")
         getter.overriddenSymbols = listOf(propertyAccessorGetter)
 
         // BLOCK_BODY
-        // RETURN type=kotlin.Nothing from='public final fun <get-objectPointer> (): kotlin.Long? declared in dev.nhachicha.Foo.$BarqHandler'
+        // RETURN type=kotlin.Nothing from='public final fun <get-objectPointer> (): kotlin.Long? declared in com.example.Foo.$BarqHandler'
         // GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:objectPointer type:kotlin.Long? visibility:private' type=kotlin.Long? origin=null
-        // receiver: GET_VAR '<this>: dev.nhachicha.Foo.$BarqHandler declared in dev.nhachicha.Foo.$BarqHandler.<get-objectPointer>' type=dev.nhachicha.Foo.$BarqHandler origin=null
+        // receiver: GET_VAR '<this>: com.example.Foo.$BarqHandler declared in com.example.Foo.$BarqHandler.<get-objectPointer>' type=com.example.Foo.$BarqHandler origin=null
         getter.body = pluginContext.blockBody(getter.symbol) {
             at(startOffset, endOffset)
             +irReturn(
@@ -858,7 +858,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
             )
         }
 
-        // FUN DEFAULT_PROPERTY_ACCESSOR name:<set-barqPointer> visibility:public modality:OPEN <> ($this:dev.nhachicha.Child, <set-?>:kotlin.Long?) returnType:kotlin.Unit
+        // FUN DEFAULT_PROPERTY_ACCESSOR name:<set-barqPointer> visibility:public modality:OPEN <> ($this:com.example.Child, <set-?>:kotlin.Long?) returnType:kotlin.Unit
         //  correspondingProperty: PROPERTY name:barqPointer visibility:public modality:OPEN [var]
         val setter = property.addSetter {
             at(this@addInternalVarProperty.startOffset, this@addInternalVarProperty.endOffset)
@@ -866,12 +866,12 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
             modality = Modality.OPEN
             returnType = pluginContext.irBuiltIns.unitType
         }
-        // $this: VALUE_PARAMETER name:<this> type:dev.nhachicha.Child
+        // $this: VALUE_PARAMETER name:<this> type:com.example.Child
         setter.dispatchReceiverParameter = thisReceiver!!.copyTo(setter)
         setter.correspondingPropertySymbol = property.symbol
 
         // overridden:
-        //  public abstract fun <set-barqPointer> (<set-?>: kotlin.Long?): kotlin.Unit declared in dev.nhachicha.BarqObjectInternal
+        //  public abstract fun <set-barqPointer> (<set-?>: kotlin.Long?): kotlin.Unit declared in com.example.BarqObjectInternal
         val barqPointerSetter = owner.getPropertySetter(propertyName.asString())
             ?: fatalError("${propertyName.asString()} function getter symbol is not available")
         setter.overriddenSymbols = listOf(barqPointerSetter)

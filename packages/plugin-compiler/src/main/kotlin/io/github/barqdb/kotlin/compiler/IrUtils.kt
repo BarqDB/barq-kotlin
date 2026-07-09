@@ -530,18 +530,18 @@ fun IrClass.addValueProperty(
         modality = Modality.FINAL
         returnType = propertyType
     }
-    // $this: VALUE_PARAMETER name:<this> type:dev.nhachicha.Foo.$BarqHandler
+    // $this: VALUE_PARAMETER name:<this> type:com.example.Foo.$BarqHandler
     getter.dispatchReceiverParameter = thisReceiver!!.copyTo(getter)
     // overridden:
-    //   public abstract fun <get-barqPointer> (): kotlin.Long? declared in dev.nhachicha.BarqObjectInternal
+    //   public abstract fun <get-barqPointer> (): kotlin.Long? declared in com.example.BarqObjectInternal
     val propertyAccessorGetter = superClass.getPropertyGetter(propertyName.asString())
         ?: fatalError("${propertyName.asString()} function getter symbol is not available")
     getter.overriddenSymbols = listOf(propertyAccessorGetter)
 
     // BLOCK_BODY
-    // RETURN type=kotlin.Nothing from='public final fun <get-objectPointer> (): kotlin.Long? declared in dev.nhachicha.Foo.$BarqHandler'
+    // RETURN type=kotlin.Nothing from='public final fun <get-objectPointer> (): kotlin.Long? declared in com.example.Foo.$BarqHandler'
     // GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:objectPointer type:kotlin.Long? visibility:private' type=kotlin.Long? origin=null
-    // receiver: GET_VAR '<this>: dev.nhachicha.Foo.$BarqHandler declared in dev.nhachicha.Foo.$BarqHandler.<get-objectPointer>' type=dev.nhachicha.Foo.$BarqHandler origin=null
+    // receiver: GET_VAR '<this>: com.example.Foo.$BarqHandler declared in com.example.Foo.$BarqHandler.<get-objectPointer>' type=com.example.Foo.$BarqHandler origin=null
     getter.body = pluginContext.blockBody(getter.symbol) {
         at(startOffset, endOffset)
         +irReturn(
