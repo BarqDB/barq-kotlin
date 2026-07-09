@@ -93,38 +93,41 @@ jobs:
           test -n "${ORG_GRADLE_PROJECT_signSecretRingFileKotlin}"
           test -n "${ORG_GRADLE_PROJECT_signPasswordKotlin}"
 
-      # Pull the Linux/Windows engines built by the `native` job into the paths that
-      # copyJVMSharedLibs reads. No `clean` after this point (it would wipe them; the
-      # runner is fresh anyway). The macOS dylib is still built in-job by buildJVMSharedLibs.
-      - name: Download native JVM engine (Linux)
+      # Stage the Linux/Windows engines built by the `native` job DIRECTLY into cinterop's
+      # jvm resources, so jvmProcessResources bundles them into cinterop-jvm.jar. This
+      # bypasses copyJVMSharedLibs (whose up-to-date check skipped the copy). The `clean`
+      # below deletes only build/, .cxx and the macOS dylib output — NOT jni/linux or
+      # jni/windows — so these survive, and the macOS dylib is rebuilt in-job.
+      - name: Stage native JVM engine (Linux)
         uses: actions/download-artifact@v4
         with:
           name: jni-linux
-          path: packages/cinterop/build/barqLinuxBuild
+          path: packages/cinterop/src/jvmMain/resources/jni/linux
 
-      - name: Download native JVM engine (Windows)
+      - name: Stage native JVM engine (Windows)
         uses: actions/download-artifact@v4
         with:
           name: jni-windows
-          path: packages/cinterop/build/barqWindowsBuild/Release
+          path: packages/cinterop/src/jvmMain/resources/jni/windows
 
       - name: Build signed Maven artifacts
         working-directory: packages
         run: |
-          ./gradlew --console=plain --no-daemon publishCIPackages \
+          ./gradlew --console=plain --no-daemon clean publishCIPackages \
             -PgeneratePluginArtifactMarker=true \
             -Pbarq.kotlin.mainHost=true \
-            -Pbarq.kotlin.copyNativeJvmLibs=linux,windows \
             -Pbarq.kotlin.targets=iosArm64,iosX64,jvm,macosX64,macosArm64,android,compilerPlugin,gradlePlugin
 
-      # Fail before upload if the fat jar is missing any engine — never publish a
-      # jar that only works on one OS.
-      - name: Verify JVM fat jar bundles macOS + Linux + Windows engines
+      # The engines live in cinterop-jvm.jar (library-base-jvm depends on it, transitively
+      # pulling the native code). Fail before upload if any engine is missing — never
+      # publish a jar that only works on one OS.
+      - name: Verify cinterop-jvm jar bundles macOS + Linux + Windows engines
         run: |
           set -euo pipefail
-          jar="$(find packages -name 'library-base-jvm-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' | head -1)"
-          test -n "$jar" || { echo "library-base-jvm jar not found"; exit 1; }
+          jar="$(find packages -name 'cinterop-jvm-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' | head -1)"
+          test -n "$jar" || { echo "cinterop-jvm jar not found"; exit 1; }
           echo "Inspecting: $jar"
+          unzip -l "$jar" | grep -E 'jni/' || true
           for p in jni/macos/libbarqc.dylib jni/linux/libbarqc.so jni/windows/barqc.dll; do
             unzip -l "$jar" | grep -q "$p" || { echo "MISSING native engine: $p"; exit 1; }
             echo "  ok: $p"
