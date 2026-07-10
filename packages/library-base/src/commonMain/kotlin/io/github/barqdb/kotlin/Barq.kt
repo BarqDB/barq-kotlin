@@ -93,7 +93,7 @@ public interface Barq : TypedBarq {
          * **WARNING**: For synchronized barqs there is a chance that an internal Barq instance on
          * the background thread is not closed even though the user controlled Barq instances are
          * closed. This will result in an `IllegalStateException`. See issue
-         * https://github.com/barq/barq-java/issues/5416 for more details.
+         * https://github.com/realm/realm-java/issues/5416 for more details.
          *
          * @param configuration a [Configuration] object that defines the Barq.
          * @throws IllegalStateException if an error occurred while deleting the Barq files.
