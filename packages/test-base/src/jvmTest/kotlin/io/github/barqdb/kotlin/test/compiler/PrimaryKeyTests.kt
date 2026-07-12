@@ -49,10 +49,10 @@ class PrimaryKeyTests {
             Long::class to "1",
             Float::class to "1.4f",
             Double::class to "1.4",
-            Decimal128::class to "Decimal128(\"1.4E100\")",
+            Decimal128::class to "BarqDecimal128(\"1.4E100\")",
             String::class to "\"Barq\"",
             BarqInstant::class to "BarqInstant.from(42, 420)",
-            ObjectId::class to "ObjectId()",
+            ObjectId::class to "BarqObjectId()",
             BarqUUID::class to "BarqUUID.random()",
             ByteArray::class to "byteArrayOf(42)",
             MutableBarqInt::class to "MutableBarqInt.create(42)"
@@ -80,8 +80,8 @@ class PrimaryKeyTests {
                         import io.github.barqdb.kotlin.types.BarqUUID
                         import io.github.barqdb.kotlin.BarqConfiguration
                         import io.github.barqdb.kotlin.types.annotations.PrimaryKey
-                        import io.github.barqdb.kotlin.types.ObjectId
-                        import io.github.barqdb.kotlin.types.Decimal128
+                        import io.github.barqdb.kotlin.types.BarqObjectId
+                        import io.github.barqdb.kotlin.types.BarqDecimal128
 
                         class A : BarqObject {
                             @PrimaryKey
