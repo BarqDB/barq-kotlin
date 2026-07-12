@@ -503,6 +503,7 @@ actual object BarqInterop {
             m = config.m
             ef_construction = config.efConstruction
             ef_search = config.efSearch
+            build_threads = config.buildThreads
         }
         barqc.barq_add_vector_index(barq.cptr(), classKey.key, columnKey.key, cconfig)
     }
@@ -538,7 +539,8 @@ actual object BarqInterop {
             dimensions = cconfig.dimensions,
             m = cconfig.m,
             efConstruction = cconfig.ef_construction,
-            efSearch = cconfig.ef_search
+            efSearch = cconfig.ef_search,
+            buildThreads = cconfig.build_threads
         )
     }
 

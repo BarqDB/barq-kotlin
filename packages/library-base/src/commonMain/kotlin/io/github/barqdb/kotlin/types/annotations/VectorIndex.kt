@@ -45,6 +45,7 @@ import io.github.barqdb.kotlin.types.VectorMetric
  * @param m the HNSW graph out-degree (higher = better recall, larger index).
  * @param efConstruction the build-time beam width (higher = better graph, slower build).
  * @param efSearch the default query-time beam width, or 0 for the engine default. Overridable per query.
+ * @param buildThreads workers used for a full build or rebuild, or 0 for one per available core.
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FIELD)
@@ -55,5 +56,6 @@ public annotation class VectorIndex(
     val encoding: VectorEncoding = VectorEncoding.FLOAT32,
     val m: Int = 16,
     val efConstruction: Int = 200,
-    val efSearch: Int = 0
+    val efSearch: Int = 0,
+    val buildThreads: Int = 0
 )

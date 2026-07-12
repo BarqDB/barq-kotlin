@@ -983,6 +983,7 @@ actual object BarqInterop {
             cconfig.m = config.m.toULong()
             cconfig.ef_construction = config.efConstruction.toULong()
             cconfig.ef_search = config.efSearch.toULong()
+            cconfig.build_threads = config.buildThreads.toULong()
             checkedBooleanResult(
                 barq_wrapper.barq_add_vector_index(
                     barq.cptr(),
@@ -1044,7 +1045,8 @@ actual object BarqInterop {
                 dimensions = cconfig.dimensions.toLong(),
                 m = cconfig.m.toLong(),
                 efConstruction = cconfig.ef_construction.toLong(),
-                efSearch = cconfig.ef_search.toLong()
+                efSearch = cconfig.ef_search.toLong(),
+                buildThreads = cconfig.build_threads.toLong()
             )
         }
     }

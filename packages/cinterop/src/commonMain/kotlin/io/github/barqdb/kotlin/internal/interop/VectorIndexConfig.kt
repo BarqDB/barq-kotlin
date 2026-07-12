@@ -29,4 +29,5 @@ class VectorIndexConfig(
     val m: Long,
     val efConstruction: Long,
     val efSearch: Long,
+    val buildThreads: Long,
 )

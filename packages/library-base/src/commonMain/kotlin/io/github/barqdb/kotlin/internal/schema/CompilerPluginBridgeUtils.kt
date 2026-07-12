@@ -48,7 +48,8 @@ internal fun createPropertyInfo(
     vectorEncoding: Int = 0,
     vectorM: Int = 16,
     vectorEfConstruction: Int = 200,
-    vectorEfSearch: Int = 0
+    vectorEfSearch: Int = 0,
+    vectorBuildThreads: Int = 0
 ): PropertyInfo {
 
     // Locate the link target dynamically. We do this to work around incremental
@@ -72,7 +73,8 @@ internal fun createPropertyInfo(
             dimensions = vectorDimensions.toLong(),
             m = vectorM.toLong(),
             efConstruction = vectorEfConstruction.toLong(),
-            efSearch = vectorEfSearch.toLong()
+            efSearch = vectorEfSearch.toLong(),
+            buildThreads = vectorBuildThreads.toLong()
         )
     } else {
         null

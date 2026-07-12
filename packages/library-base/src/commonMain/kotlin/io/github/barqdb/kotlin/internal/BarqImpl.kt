@@ -232,11 +232,14 @@ public class BarqImpl private constructor(
                 val existing = BarqInterop.barq_get_vector_index_config(frozen.dbPointer, classMeta.classKey, columnKey)
                 if (existing.dimensions != target.config.dimensions ||
                     existing.metric != target.config.metric ||
-                    existing.encoding != target.config.encoding
+                    existing.encoding != target.config.encoding ||
+                    existing.m != target.config.m ||
+                    existing.efConstruction != target.config.efConstruction ||
+                    existing.efSearch != target.config.efSearch
                 ) {
                     throw IllegalStateException(
                         "The vector index on '${target.className}.${target.propertyName}' was built with a " +
-                            "different configuration (dimensions/metric/encoding) than the schema declares. " +
+                            "different persisted configuration than the schema declares. " +
                             "Delete the Barq file to rebuild it."
                     )
                 }

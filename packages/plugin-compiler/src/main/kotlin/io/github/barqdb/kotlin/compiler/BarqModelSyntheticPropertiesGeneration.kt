@@ -625,6 +625,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                 var vectorM = 16
                                 var vectorEfConstruction = 200
                                 var vectorEfSearch = 0
+                                var vectorBuildThreads = 0
                                 if (isVectorIndexed) {
                                     if (isIndexed || isFullTextIndexed || primaryKey) {
                                         logError(
@@ -651,6 +652,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     vectorM = intArg(3, 16)
                                     vectorEfConstruction = intArg(4, 200)
                                     vectorEfSearch = intArg(5, 0)
+                                    vectorBuildThreads = intArg(6, 0)
                                 }
 
                                 val location = property.locationOf()
@@ -768,7 +770,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     type = propertyClass.defaultType,
                                     symbol = propertyCreateMethod,
                                     typeArgumentsCount = 0,
-                                    valueArgumentsCount = 16
+                                    valueArgumentsCount = 17
                                 ).apply {
                                     var arg = 0
                                     // Persisted name
@@ -799,6 +801,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorM))
                                     putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorEfConstruction))
                                     putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorEfSearch))
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorBuildThreads))
                                 }
                             }
                         )

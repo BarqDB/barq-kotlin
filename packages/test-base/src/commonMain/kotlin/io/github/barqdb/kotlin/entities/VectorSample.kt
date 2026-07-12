@@ -18,6 +18,7 @@ package io.github.barqdb.kotlin.entities
 import io.github.barqdb.kotlin.ext.barqListOf
 import io.github.barqdb.kotlin.types.BarqList
 import io.github.barqdb.kotlin.types.BarqObject
+import io.github.barqdb.kotlin.types.VectorEncoding
 import io.github.barqdb.kotlin.types.VectorMetric
 import io.github.barqdb.kotlin.types.annotations.PrimaryKey
 import io.github.barqdb.kotlin.types.annotations.VectorIndex
@@ -27,6 +28,14 @@ class VectorSample : BarqObject {
     var id: Int = 0
     var label: String = ""
 
-    @VectorIndex(dimensions = 4, metric = VectorMetric.L2)
+    @VectorIndex(
+        dimensions = 4,
+        metric = VectorMetric.L2,
+        encoding = VectorEncoding.SQ8,
+        m = 8,
+        efConstruction = 32,
+        efSearch = 16,
+        buildThreads = 1
+    )
     var embedding: BarqList<Float> = barqListOf()
 }
