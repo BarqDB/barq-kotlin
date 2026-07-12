@@ -58,6 +58,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y swig zlib1g-dev ccache
 
+      # The cinterop Android externalNativeBuild pins SDK CMake 3.22.1, which
+      # the ubuntu-24.04 image no longer preinstalls (22.04 shipped it).
+      - name: Install Android SDK CMake 3.22.1
+        run: echo y | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "cmake;3.22.1"
+
       # Hardware acceleration for the emulator on Linux runners.
       - name: Enable KVM
         run: |
