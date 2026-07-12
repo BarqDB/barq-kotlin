@@ -31,7 +31,10 @@ permissions:
 jobs:
   instrumented:
     name: emulator (api 34, x86_64)
-    runs-on: ubuntu-22.04
+    # 24.04 ships swig 4.2: 22.04's swig 4.0.2 generates arrays_java helpers
+    # that only compile where jlong == long long (macOS/Windows), breaking the
+    # generated wrapper on Android/Linux.
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - name: Checkout

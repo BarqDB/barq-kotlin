@@ -35,7 +35,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          # 24.04 for swig 4.2: 4.0.2 (22.04) generates arrays_java helpers that
+          # only compile where jlong == long long, breaking the JNI wrapper on
+          # Linux since the float[] knn typemap pulled in arrays_java.i.
+          - os: ubuntu-24.04
             platform: linux
             artifact: jni-linux
             lib_path: packages/cinterop/build/barqLinuxBuild/libbarqc.so
