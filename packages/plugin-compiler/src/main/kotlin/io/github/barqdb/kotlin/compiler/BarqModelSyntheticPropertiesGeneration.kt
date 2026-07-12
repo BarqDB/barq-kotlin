@@ -633,6 +633,17 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                             property.locationOf()
                                         )
                                     }
+                                    // The engine indexes fixed-width float vectors only, and a nullable
+                                    // element type would make nulls silently unindexable — reject both
+                                    // here rather than at open time.
+                                    if (value.collectionType != CollectionType.LIST ||
+                                        value.propertyType != PropertyType.BARQ_PROPERTY_TYPE_FLOAT || nullable
+                                    ) {
+                                        logError(
+                                            "Vector-indexed property ${property.name} must be of type BarqList<Float> (non-nullable elements)",
+                                            property.locationOf()
+                                        )
+                                    }
                                     val vectorAnnotation = backingField.getAnnotation(VECTOR_INDEX_ANNOTATION.asSingleFqName())
                                     fun intArg(index: Int, default: Int): Int =
                                         (vectorAnnotation?.getValueArgument(index) as? IrConst<*>)?.value as? Int ?: default
@@ -643,7 +654,16 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                             "INNER_PRODUCT", "FLOAT32" -> 0
                                             "L2", "SQ8" -> 1
                                             "COSINE" -> 2
-                                            else -> default
+                                            else -> {
+                                                // A new enum entry must be wired into this map (SOURCE
+                                                // retention forces name-based reading) — never silently
+                                                // fall back to a different metric/encoding.
+                                                logError(
+                                                    "Unknown @VectorIndex enum entry '$entryName' on property ${property.name}",
+                                                    property.locationOf()
+                                                )
+                                                default
+                                            }
                                         }
                                     }
                                     vectorDimensions = intArg(0, 0)
