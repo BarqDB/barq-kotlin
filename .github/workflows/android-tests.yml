@@ -1,0 +1,83 @@
+# Copyright (c) 2026 the Barq authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Runs the vector-search instrumented tests on an Android emulator. Scoped to
+# VectorSearchTests for now: the androidInstrumentedTest <- commonTest symlink was
+# broken from the fork until this branch, so the rest of the common suite has
+# never run on Android and gets enabled (and fixed) separately.
+name: Android vector tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/vector-search
+
+permissions:
+  contents: read
+
+jobs:
+  instrumented:
+    name: emulator (api 34, x86_64)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # The instrumented app bundles the Android JNI engine; its cmake build
+      # consumes the SWIG-generated wrapper, so generate it explicitly first
+      # (same reason as in build-jvm-native.yml).
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y swig zlib1g-dev
+
+      # Hardware acceleration for the emulator on Linux runners.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Generate SWIG JNI stubs
+        working-directory: packages
+        run: ./gradlew --no-daemon --console=plain :jni-swig-stub:barqWrapperJvm
+
+      - name: Run VectorSearchTests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          disable-animations: true
+          working-directory: packages
+          script: ./gradlew --no-daemon --console=plain :test-base:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=io.github.barqdb.kotlin.test.common.VectorSearchTests
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-results
+          path: packages/test-base/build/outputs/androidTest-results/
+          retention-days: 7
+          if-no-files-found: ignore
