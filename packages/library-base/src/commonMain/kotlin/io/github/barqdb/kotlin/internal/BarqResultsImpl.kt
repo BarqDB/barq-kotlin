@@ -107,6 +107,13 @@ internal class BarqResultsImpl<E : BaseBarqObject> constructor(
         exact: Boolean
     ): BarqResults<E> {
         require(k > 0) { "'k' must be a positive integer." }
+        // A negative ef becomes a huge size_t in the C API and silently turns the
+        // approximate search into an exhaustive scan.
+        require(ef >= 0) { "'ef' must be a non-negative integer." }
+        // An empty query can never match the index dimension; rejecting it here also
+        // keeps the platforms consistent (Kotlin/Native's array pinning cannot take
+        // the address of an empty array).
+        require(queryVector.isNotEmpty()) { "'queryVector' must not be empty." }
         val classMetadata = barq.schemaMetadata[classKey]
             ?: throw IllegalArgumentException("kNN search is only supported on results of Barq objects.")
         val propertyKey = classMetadata.getOrThrow(property).key

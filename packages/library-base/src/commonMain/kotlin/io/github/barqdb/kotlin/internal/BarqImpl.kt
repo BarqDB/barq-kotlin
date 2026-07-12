@@ -223,7 +223,11 @@ public class BarqImpl private constructor(
         }
         if (targets.isEmpty()) return
 
-        // Read pass on the current (frozen) reference: find missing indexes and validate existing ones.
+        // Read pass on the current (frozen) reference: find indexes that need work and
+        // validate existing ones. efSearch is deliberately absent from the mismatch
+        // check — it is a query-time knob (core's own compatibility rule excludes it),
+        // so a drifted value is adopted in place by the write pass instead of failing
+        // the open.
         val frozen = barqReference
         val missing = targets.filter { target ->
             val classMeta = frozen.schemaMetadata.getOrThrow(target.className)
@@ -234,8 +238,7 @@ public class BarqImpl private constructor(
                     existing.metric != target.config.metric ||
                     existing.encoding != target.config.encoding ||
                     existing.m != target.config.m ||
-                    existing.efConstruction != target.config.efConstruction ||
-                    existing.efSearch != target.config.efSearch
+                    existing.efConstruction != target.config.efConstruction
                 ) {
                     throw IllegalStateException(
                         "The vector index on '${target.className}.${target.propertyName}' was built with a " +
@@ -243,27 +246,28 @@ public class BarqImpl private constructor(
                             "Delete the Barq file to rebuild it."
                     )
                 }
-                false
+                existing.efSearch != target.config.efSearch
             } else {
                 true
             }
         }
         if (missing.isEmpty()) return
 
-        // Write pass: build the missing indexes in a single write transaction on the live reference.
+        // Write pass: build the missing indexes (and adopt drifted efSearch values) in a
+        // single write transaction on the live reference. barq_add_vector_index is
+        // idempotent on an identical config and updates a drifted ef_search in place, so
+        // no per-target re-check is needed; a conflicting concurrent change still throws.
         write {
             val live = (this as BaseBarqImpl).barqReference
             missing.forEach { target ->
                 val classMeta = live.schemaMetadata.getOrThrow(target.className)
                 val columnKey = classMeta.getOrThrow(target.propertyName).key
-                if (!BarqInterop.barq_has_vector_index(live.dbPointer, classMeta.classKey, columnKey)) {
-                    BarqInterop.barq_add_vector_index(
-                        live.dbPointer as LiveBarqPointer,
-                        classMeta.classKey,
-                        columnKey,
-                        target.config
-                    )
-                }
+                BarqInterop.barq_add_vector_index(
+                    live.dbPointer as LiveBarqPointer,
+                    classMeta.classKey,
+                    columnKey,
+                    target.config
+                )
             }
         }
     }

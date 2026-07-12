@@ -109,4 +109,33 @@ class VectorSearchTests {
             barq.query<VectorSample>().find().knn("embedding", floatArrayOf(1f, 0f, 0f, 0f), k = 0)
         }
     }
+
+    @Test
+    fun knn_rejectsNegativeEf() {
+        // A negative ef would wrap to a huge size_t and silently force an exhaustive scan.
+        seedAxes()
+        assertFailsWith<IllegalArgumentException> {
+            barq.query<VectorSample>().find().knn("embedding", floatArrayOf(1f, 0f, 0f, 0f), k = 1, ef = -1)
+        }
+    }
+
+    @Test
+    fun knn_rejectsEmptyQueryVector() {
+        // Rejected up front on every platform (Kotlin/Native cannot even pin an empty array).
+        seedAxes()
+        assertFailsWith<IllegalArgumentException> {
+            barq.query<VectorSample>().find().knn("embedding", floatArrayOf(), k = 1)
+        }
+    }
+
+    @Test
+    fun knn_wrongDimensionThrowsThroughTheCApi() {
+        // A core-side error must still surface as an exception now that the JNI
+        // wrapper releases the query buffer on the error path instead of
+        // returning early.
+        seedAxes()
+        assertFailsWith<IllegalStateException> {
+            barq.query<VectorSample>().find().knn("embedding", floatArrayOf(1f, 0f), k = 1)
+        }
+    }
 }

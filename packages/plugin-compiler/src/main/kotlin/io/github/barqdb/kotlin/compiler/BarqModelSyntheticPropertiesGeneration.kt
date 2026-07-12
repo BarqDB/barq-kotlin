@@ -653,6 +653,41 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     vectorEfConstruction = intArg(4, 200)
                                     vectorEfSearch = intArg(5, 0)
                                     vectorBuildThreads = intArg(6, 0)
+
+                                    // Reject values the engine cannot take before they cross the C
+                                    // boundary: a negative Int would silently become a huge size_t
+                                    // (allocation explosion at open), and a negative dimensions used
+                                    // to make the whole annotation a silent no-op.
+                                    if (vectorDimensions < 0) {
+                                        logError(
+                                            "@VectorIndex dimensions must be 0 (infer from data) or positive on property ${property.name}",
+                                            property.locationOf()
+                                        )
+                                    }
+                                    if (vectorM < 2) {
+                                        logError(
+                                            "@VectorIndex m must be at least 2 on property ${property.name}",
+                                            property.locationOf()
+                                        )
+                                    }
+                                    if (vectorEfConstruction < 1) {
+                                        logError(
+                                            "@VectorIndex efConstruction must be positive on property ${property.name}",
+                                            property.locationOf()
+                                        )
+                                    }
+                                    if (vectorEfSearch < 0) {
+                                        logError(
+                                            "@VectorIndex efSearch must not be negative on property ${property.name}",
+                                            property.locationOf()
+                                        )
+                                    }
+                                    if (vectorBuildThreads < 0) {
+                                        logError(
+                                            "@VectorIndex buildThreads must not be negative on property ${property.name}",
+                                            property.locationOf()
+                                        )
+                                    }
                                 }
 
                                 val location = property.locationOf()

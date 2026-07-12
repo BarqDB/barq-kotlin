@@ -434,6 +434,21 @@ $result = SWIG_JavaArrayOutLonglong(jenv, (long long *)result, 2);
 // parameter name so no other float* is affected).
 %apply float[] {const float* query_data};
 
+// barq_results_knn_search takes that float[] as an argument, and its pinned JNI
+// buffer plus the C++ heap copy must be released even when the call fails. The
+// generic SWIGTYPE* out typemap returns early on error, which would skip the
+// argout/freearg cleanup emitted after it and leak both buffers on every failed
+// call (dimension mismatch, missing index, ...). This function-specific typemap
+// leaves the Java exception pending and falls through instead —
+// ReleaseFloatArrayElements is one of the JNI calls that is explicitly allowed
+// with an exception pending.
+%typemap(out) barq_results_t* barq_results_knn_search {
+    if (!result) {
+        throw_last_error_as_java_exception(jenv);
+    }
+    *($1_type*)&jresult = result;
+}
+
 // Just generate constants for the enum and pass them back and forth as integers
 %include "enumtypeunsafe.swg"
 %javaconst(1);
