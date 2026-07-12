@@ -377,7 +377,7 @@ import static io.github.barqdb.kotlin.internal.interop.barq_errno_e.*;
                       bool* erased, bool* out_erased, bool* did_refresh, bool* did_run,
                       bool* found, bool* out_collection_was_cleared, bool* did_compact,
                       bool* collection_was_cleared, bool* out_collection_was_deleted,
-                      bool* out_was_deleted};
+                      bool* out_was_deleted, bool* out_has};
 
 // uint64_t output parameter for barq_get_num_versions
 %apply int64_t* OUTPUT { uint64_t* out_versions_count };
@@ -429,6 +429,10 @@ $result = SWIG_JavaArrayOutLonglong(jenv, (long long *)result, 2);
 %}
 
 %apply uint32_t[] {barq_class_key_t*};
+
+// Marshal the kNN query vector as a Java float[] (scoped to the query_data
+// parameter name so no other float* is affected).
+%apply float[] {const float* query_data};
 
 // Just generate constants for the enum and pass them back and forth as integers
 %include "enumtypeunsafe.swg"

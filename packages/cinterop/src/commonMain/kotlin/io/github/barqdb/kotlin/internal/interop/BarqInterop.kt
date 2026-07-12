@@ -297,6 +297,30 @@ expect object BarqInterop {
 
     fun barq_get_col_key(barq: BarqPointer, classKey: ClassKey, col: String): PropertyKey
 
+    // --- Vector (HNSW) index management + kNN search. Local only: vector
+    // indexes are built imperatively and never written to sync changesets. ---
+    fun barq_add_vector_index(
+        barq: LiveBarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey,
+        config: VectorIndexConfig
+    )
+    fun barq_remove_vector_index(barq: LiveBarqPointer, classKey: ClassKey, columnKey: PropertyKey)
+    fun barq_has_vector_index(barq: BarqPointer, classKey: ClassKey, columnKey: PropertyKey): Boolean
+    fun barq_get_vector_index_config(
+        barq: BarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ): VectorIndexConfig
+    fun barq_results_knn_search(
+        results: BarqResultsPointer,
+        columnKey: PropertyKey,
+        queryVector: FloatArray,
+        k: Long,
+        ef: Long,
+        exact: Boolean
+    ): BarqResultsPointer
+
     fun MemAllocator.barq_get_value(obj: BarqObjectPointer, key: PropertyKey): BarqValue
     fun barq_set_value(
         obj: BarqObjectPointer,

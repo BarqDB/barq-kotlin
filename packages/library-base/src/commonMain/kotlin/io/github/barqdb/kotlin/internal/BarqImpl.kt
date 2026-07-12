@@ -23,6 +23,8 @@ import io.github.barqdb.kotlin.dynamic.DynamicBarq
 import io.github.barqdb.kotlin.internal.dynamic.DynamicBarqImpl
 import io.github.barqdb.kotlin.internal.interop.ClassKey
 import io.github.barqdb.kotlin.internal.interop.BarqInterop
+import io.github.barqdb.kotlin.internal.interop.LiveBarqPointer
+import io.github.barqdb.kotlin.internal.interop.VectorIndexConfig
 import io.github.barqdb.kotlin.internal.interop.BarqKeyPathArrayPointer
 import io.github.barqdb.kotlin.internal.interop.SynchronizableObject
 import io.github.barqdb.kotlin.internal.platform.copyAssetFile
@@ -135,6 +137,7 @@ public class BarqImpl private constructor(
                 versionTracker.trackReference(frozenReference)
                 initialBarqReference.value = frozenReference
                 configuration.initializeBarqData(this@BarqImpl, barqFileCreated)
+                reconcileVectorIndexes()
             }
 
             barqScope.launch {
@@ -201,6 +204,66 @@ public class BarqImpl private constructor(
     }
 
     override suspend fun <R> write(block: MutableBarq.() -> R): R = writer.write(block)
+
+    /**
+     * Build any vector (HNSW) indexes declared with `@VectorIndex` that the file does not yet have.
+     * Vector indexes are local: they are not part of the shared/synced schema, so Core does not build
+     * them at schema-apply. We reconcile them here on every open (a newly added `@VectorIndex` property
+     * on an existing file must get its index built too), skipping the work when nothing is missing so a
+     * no-op open does not open a write transaction. Throws if an existing index was built with a
+     * different configuration than the schema now declares.
+     */
+    private suspend fun reconcileVectorIndexes() {
+        data class VectorTarget(val className: String, val propertyName: String, val config: VectorIndexConfig)
+        val targets: List<VectorTarget> = configuration.mapOfKClassWithCompanion.values.flatMap { companion ->
+            val classImpl = companion.`io_github_barqdb_kotlin_schema`()
+            classImpl.cinteropProperties.mapNotNull { prop ->
+                prop.vectorConfig?.let { VectorTarget(classImpl.name, prop.name, it) }
+            }
+        }
+        if (targets.isEmpty()) return
+
+        // Read pass on the current (frozen) reference: find missing indexes and validate existing ones.
+        val frozen = barqReference
+        val missing = targets.filter { target ->
+            val classMeta = frozen.schemaMetadata.getOrThrow(target.className)
+            val columnKey = classMeta.getOrThrow(target.propertyName).key
+            if (BarqInterop.barq_has_vector_index(frozen.dbPointer, classMeta.classKey, columnKey)) {
+                val existing = BarqInterop.barq_get_vector_index_config(frozen.dbPointer, classMeta.classKey, columnKey)
+                if (existing.dimensions != target.config.dimensions ||
+                    existing.metric != target.config.metric ||
+                    existing.encoding != target.config.encoding
+                ) {
+                    throw IllegalStateException(
+                        "The vector index on '${target.className}.${target.propertyName}' was built with a " +
+                            "different configuration (dimensions/metric/encoding) than the schema declares. " +
+                            "Delete the Barq file to rebuild it."
+                    )
+                }
+                false
+            } else {
+                true
+            }
+        }
+        if (missing.isEmpty()) return
+
+        // Write pass: build the missing indexes in a single write transaction on the live reference.
+        write {
+            val live = (this as BaseBarqImpl).barqReference
+            missing.forEach { target ->
+                val classMeta = live.schemaMetadata.getOrThrow(target.className)
+                val columnKey = classMeta.getOrThrow(target.propertyName).key
+                if (!BarqInterop.barq_has_vector_index(live.dbPointer, classMeta.classKey, columnKey)) {
+                    BarqInterop.barq_add_vector_index(
+                        live.dbPointer as LiveBarqPointer,
+                        classMeta.classKey,
+                        columnKey,
+                        target.config
+                    )
+                }
+            }
+        }
+    }
 
     override fun <R> writeBlocking(block: MutableBarq.() -> R): R {
         writer.checkInTransaction("Cannot initiate transaction when already in a write transaction")

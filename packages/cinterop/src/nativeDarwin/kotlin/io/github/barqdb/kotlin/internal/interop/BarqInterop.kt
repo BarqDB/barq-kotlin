@@ -95,6 +95,7 @@ import platform.posix.uint8_tVar
 import barq_wrapper.barq_app_error_t
 import barq_wrapper.barq_binary_t
 import barq_wrapper.barq_class_info_t
+import barq_wrapper.barq_vector_index_config_t
 import barq_wrapper.barq_class_key_tVar
 import barq_wrapper.barq_clear_last_error
 import barq_wrapper.barq_clone
@@ -965,6 +966,109 @@ actual object BarqInterop {
     actual fun barq_get_col_key(barq: BarqPointer, classKey: ClassKey, col: String): PropertyKey {
         memScoped {
             return PropertyKey(propertyInfo(barq, classKey, col).key)
+        }
+    }
+
+    actual fun barq_add_vector_index(
+        barq: LiveBarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey,
+        config: VectorIndexConfig
+    ) {
+        memScoped {
+            val cconfig = alloc<barq_vector_index_config_t>()
+            cconfig.metric = config.metric.toUInt()
+            cconfig.encoding = config.encoding.toUInt()
+            cconfig.dimensions = config.dimensions.toULong()
+            cconfig.m = config.m.toULong()
+            cconfig.ef_construction = config.efConstruction.toULong()
+            cconfig.ef_search = config.efSearch.toULong()
+            checkedBooleanResult(
+                barq_wrapper.barq_add_vector_index(
+                    barq.cptr(),
+                    classKey.key.toUInt(),
+                    columnKey.key,
+                    cconfig.ptr
+                )
+            )
+        }
+    }
+
+    actual fun barq_remove_vector_index(
+        barq: LiveBarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ) {
+        checkedBooleanResult(
+            barq_wrapper.barq_remove_vector_index(barq.cptr(), classKey.key.toUInt(), columnKey.key)
+        )
+    }
+
+    actual fun barq_has_vector_index(
+        barq: BarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ): Boolean {
+        memScoped {
+            val hasIndex = alloc<BooleanVar>()
+            checkedBooleanResult(
+                barq_wrapper.barq_has_vector_index(
+                    barq.cptr(),
+                    classKey.key.toUInt(),
+                    columnKey.key,
+                    hasIndex.ptr
+                )
+            )
+            return hasIndex.value
+        }
+    }
+
+    actual fun barq_get_vector_index_config(
+        barq: BarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ): VectorIndexConfig {
+        memScoped {
+            val cconfig = alloc<barq_vector_index_config_t>()
+            checkedBooleanResult(
+                barq_wrapper.barq_get_vector_index_config(
+                    barq.cptr(),
+                    classKey.key.toUInt(),
+                    columnKey.key,
+                    cconfig.ptr
+                )
+            )
+            return VectorIndexConfig(
+                metric = cconfig.metric.toInt(),
+                encoding = cconfig.encoding.toInt(),
+                dimensions = cconfig.dimensions.toLong(),
+                m = cconfig.m.toLong(),
+                efConstruction = cconfig.ef_construction.toLong(),
+                efSearch = cconfig.ef_search.toLong()
+            )
+        }
+    }
+
+    actual fun barq_results_knn_search(
+        results: BarqResultsPointer,
+        columnKey: PropertyKey,
+        queryVector: FloatArray,
+        k: Long,
+        ef: Long,
+        exact: Boolean
+    ): BarqResultsPointer {
+        queryVector.usePinned { pinned ->
+            return CPointerWrapper(
+                barq_wrapper.barq_results_knn_search(
+                    results.cptr(),
+                    columnKey.key,
+                    pinned.addressOf(0),
+                    queryVector.size.toULong(),
+                    k.toULong(),
+                    ef.toULong(),
+                    exact
+                )
+            )
         }
     }
 

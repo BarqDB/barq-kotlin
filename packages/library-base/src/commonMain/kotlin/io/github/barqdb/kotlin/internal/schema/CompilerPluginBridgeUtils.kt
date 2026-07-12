@@ -18,6 +18,7 @@ package io.github.barqdb.kotlin.internal.schema
 import io.github.barqdb.kotlin.internal.interop.CollectionType
 import io.github.barqdb.kotlin.internal.interop.PropertyInfo
 import io.github.barqdb.kotlin.internal.interop.PropertyType
+import io.github.barqdb.kotlin.internal.interop.VectorIndexConfig
 import io.github.barqdb.kotlin.internal.barqObjectCompanionOrNull
 import io.github.barqdb.kotlin.types.TypedBarqObject
 import kotlin.reflect.KClass
@@ -38,7 +39,16 @@ internal fun createPropertyInfo(
     isNullable: Boolean,
     isPrimaryKey: Boolean,
     isIndexed: Boolean,
-    isFullTextIndexed: Boolean
+    isFullTextIndexed: Boolean,
+    // Vector (HNSW) index config emitted by the compiler plugin. A vectorDimensions of -1
+    // means "no vector index"; 0 or greater means the property is a @VectorIndex list of floats.
+    // metric/encoding are the raw C enum values (see VectorMetric/VectorEncoding.nativeValue).
+    vectorDimensions: Int = -1,
+    vectorMetric: Int = 0,
+    vectorEncoding: Int = 0,
+    vectorM: Int = 16,
+    vectorEfConstruction: Int = 200,
+    vectorEfSearch: Int = 0
 ): PropertyInfo {
 
     // Locate the link target dynamically. We do this to work around incremental
@@ -55,6 +65,18 @@ internal fun createPropertyInfo(
         it.barqObjectCompanionOrNull()?.io_github_barqdb_kotlin_className
             ?: throw IllegalStateException("Could not find BarqObjectCompanion for: ${linkTarget.qualifiedName}")
     }
+    val vectorConfig: VectorIndexConfig? = if (vectorDimensions >= 0) {
+        VectorIndexConfig(
+            metric = vectorMetric,
+            encoding = vectorEncoding,
+            dimensions = vectorDimensions.toLong(),
+            m = vectorM.toLong(),
+            efConstruction = vectorEfConstruction.toLong(),
+            efSearch = vectorEfSearch.toLong()
+        )
+    } else {
+        null
+    }
     return PropertyInfo.create(
         name,
         publicName,
@@ -65,6 +87,7 @@ internal fun createPropertyInfo(
         isNullable,
         isPrimaryKey,
         isIndexed,
-        isFullTextIndexed
+        isFullTextIndexed,
+        vectorConfig
     )
 }

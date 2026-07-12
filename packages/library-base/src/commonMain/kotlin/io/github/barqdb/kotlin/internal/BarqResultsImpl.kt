@@ -99,6 +99,28 @@ internal class BarqResultsImpl<E : BaseBarqObject> constructor(
         )
     }
 
+    override fun knn(
+        property: String,
+        queryVector: FloatArray,
+        k: Int,
+        ef: Int,
+        exact: Boolean
+    ): BarqResults<E> {
+        require(k > 0) { "'k' must be a positive integer." }
+        val classMetadata = barq.schemaMetadata[classKey]
+            ?: throw IllegalArgumentException("kNN search is only supported on results of Barq objects.")
+        val propertyKey = classMetadata.getOrThrow(property).key
+        val knnResults = BarqInterop.barq_results_knn_search(
+            nativePointer,
+            propertyKey,
+            queryVector,
+            k.toLong(),
+            ef.toLong(),
+            exact
+        )
+        return BarqResultsImpl(barq, knnResults, classKey, clazz, mediator)
+    }
+
     override fun asFlow(keyPaths: List<String>?): Flow<ResultsChange<E>> {
         barq.checkClosed()
         val keyPathInfo = keyPaths?.let {

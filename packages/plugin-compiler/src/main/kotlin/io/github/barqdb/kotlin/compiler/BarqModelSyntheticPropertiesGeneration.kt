@@ -23,6 +23,8 @@ import io.github.barqdb.kotlin.compiler.ClassIds.CLASS_KIND_TYPE
 import io.github.barqdb.kotlin.compiler.ClassIds.COLLECTION_TYPE
 import io.github.barqdb.kotlin.compiler.ClassIds.FULLTEXT_ANNOTATION
 import io.github.barqdb.kotlin.compiler.ClassIds.INDEX_ANNOTATION
+import io.github.barqdb.kotlin.compiler.ClassIds.VECTOR_INDEX_ANNOTATION
+import org.jetbrains.kotlin.ir.interpreter.getAnnotation
 import io.github.barqdb.kotlin.compiler.ClassIds.BARQ_OBJECT_ID
 import io.github.barqdb.kotlin.compiler.ClassIds.KOTLIN_COLLECTIONS_MAP
 import io.github.barqdb.kotlin.compiler.ClassIds.KOTLIN_COLLECTIONS_MAPOF
@@ -612,6 +614,45 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     )
                                 }
 
+                                // Vector (HNSW) index. Read @VectorIndex config here and thread it to
+                                // createPropertyInfo; the index itself is built by an open-time reconcile
+                                // pass (it is local and never part of the shared/synced schema). A
+                                // vectorDimensions of -1 means "not a vector property".
+                                val isVectorIndexed = backingField.hasAnnotation(VECTOR_INDEX_ANNOTATION)
+                                var vectorDimensions = -1
+                                var vectorMetric = 2 // VectorMetric.COSINE.nativeValue
+                                var vectorEncoding = 0 // VectorEncoding.FLOAT32.nativeValue
+                                var vectorM = 16
+                                var vectorEfConstruction = 200
+                                var vectorEfSearch = 0
+                                if (isVectorIndexed) {
+                                    if (isIndexed || isFullTextIndexed || primaryKey) {
+                                        logError(
+                                            "@VectorIndex cannot be combined with @Index, @FullText or @PrimaryKey on property ${property.name}",
+                                            property.locationOf()
+                                        )
+                                    }
+                                    val vectorAnnotation = backingField.getAnnotation(VECTOR_INDEX_ANNOTATION.asSingleFqName())
+                                    fun intArg(index: Int, default: Int): Int =
+                                        (vectorAnnotation?.getValueArgument(index) as? IrConst<*>)?.value as? Int ?: default
+                                    fun enumArg(index: Int, default: Int): Int {
+                                        val entryName = (vectorAnnotation?.getValueArgument(index) as? IrGetEnumValueImpl)
+                                            ?.symbol?.owner?.name?.identifier ?: return default
+                                        return when (entryName) {
+                                            "INNER_PRODUCT", "FLOAT32" -> 0
+                                            "L2", "SQ8" -> 1
+                                            "COSINE" -> 2
+                                            else -> default
+                                        }
+                                    }
+                                    vectorDimensions = intArg(0, 0)
+                                    vectorMetric = enumArg(1, 2)
+                                    vectorEncoding = enumArg(2, 0)
+                                    vectorM = intArg(3, 16)
+                                    vectorEfConstruction = intArg(4, 200)
+                                    vectorEfSearch = intArg(5, 0)
+                                }
+
                                 val location = property.locationOf()
                                 val persistedName = value.persistedName
                                 val publicName = value.publicName
@@ -727,7 +768,7 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     type = propertyClass.defaultType,
                                     symbol = propertyCreateMethod,
                                     typeArgumentsCount = 0,
-                                    valueArgumentsCount = 10
+                                    valueArgumentsCount = 16
                                 ).apply {
                                     var arg = 0
                                     // Persisted name
@@ -750,6 +791,14 @@ class BarqModelSyntheticPropertiesGeneration(private val pluginContext: IrPlugin
                                     putValueArgument(arg++, irBoolean(isIndexed))
                                     // IsFullTextIndexed
                                     putValueArgument(arg++, irBoolean(isFullTextIndexed))
+                                    // Vector index config (vectorDimensions -1 = not a vector property)
+                                    val intType = pluginContext.irBuiltIns.intType
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorDimensions))
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorMetric))
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorEncoding))
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorM))
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorEfConstruction))
+                                    putValueArgument(arg++, IrConstImpl.int(startOffset, endOffset, intType, vectorEfSearch))
                                 }
                             }
                         )

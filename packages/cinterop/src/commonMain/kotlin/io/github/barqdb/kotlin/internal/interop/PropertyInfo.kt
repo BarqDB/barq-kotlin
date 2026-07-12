@@ -35,6 +35,10 @@ data class PropertyInfo( // Kotlin variant of barq_property_info
     val linkOriginPropertyName: String = SCHEMA_NO_VALUE,
     val key: PropertyKey = INVALID_PROPERTY_KEY,
     val flags: Int = BARQ_PROPERTY_NORMAL,
+    // Local vector (HNSW) index config, if this property is annotated with @VectorIndex.
+    // Carried Kotlin-side only: it does not travel in the C barq_property_info_t flags and is
+    // applied imperatively by an open-time reconcile pass rather than at schema-apply.
+    val vectorConfig: VectorIndexConfig? = null,
 ) {
     val isNullable: Boolean = flags and PropertyFlags.BARQ_PROPERTY_NULLABLE != 0
     val isPrimaryKey: Boolean = flags and PropertyFlags.BARQ_PROPERTY_PRIMARY_KEY != 0
@@ -54,7 +58,8 @@ data class PropertyInfo( // Kotlin variant of barq_property_info
             isNullable: Boolean,
             isPrimaryKey: Boolean,
             isIndexed: Boolean,
-            isFullTextIndexed: Boolean
+            isFullTextIndexed: Boolean,
+            vectorConfig: VectorIndexConfig? = null
         ): PropertyInfo {
             val flags =
                 (if (isNullable) BARQ_PROPERTY_NULLABLE else 0) or
@@ -69,7 +74,8 @@ data class PropertyInfo( // Kotlin variant of barq_property_info
                 linkTarget ?: SCHEMA_NO_VALUE,
                 linkOriginPropertyName ?: SCHEMA_NO_VALUE,
                 INVALID_PROPERTY_KEY,
-                flags
+                flags,
+                vectorConfig
             )
         }
     }

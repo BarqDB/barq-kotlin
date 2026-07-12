@@ -490,6 +490,79 @@ actual object BarqInterop {
         return PropertyKey(propertyInfo(barq, classKey, col).key)
     }
 
+    actual fun barq_add_vector_index(
+        barq: LiveBarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey,
+        config: VectorIndexConfig
+    ) {
+        val cconfig = barq_vector_index_config_t().apply {
+            metric = config.metric
+            encoding = config.encoding
+            dimensions = config.dimensions
+            m = config.m
+            ef_construction = config.efConstruction
+            ef_search = config.efSearch
+        }
+        barqc.barq_add_vector_index(barq.cptr(), classKey.key, columnKey.key, cconfig)
+    }
+
+    actual fun barq_remove_vector_index(
+        barq: LiveBarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ) {
+        barqc.barq_remove_vector_index(barq.cptr(), classKey.key, columnKey.key)
+    }
+
+    actual fun barq_has_vector_index(
+        barq: BarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ): Boolean {
+        val hasIndex = booleanArrayOf(false)
+        barqc.barq_has_vector_index(barq.cptr(), classKey.key, columnKey.key, hasIndex)
+        return hasIndex[0]
+    }
+
+    actual fun barq_get_vector_index_config(
+        barq: BarqPointer,
+        classKey: ClassKey,
+        columnKey: PropertyKey
+    ): VectorIndexConfig {
+        val cconfig = barq_vector_index_config_t()
+        barqc.barq_get_vector_index_config(barq.cptr(), classKey.key, columnKey.key, cconfig)
+        return VectorIndexConfig(
+            metric = cconfig.metric,
+            encoding = cconfig.encoding,
+            dimensions = cconfig.dimensions,
+            m = cconfig.m,
+            efConstruction = cconfig.ef_construction,
+            efSearch = cconfig.ef_search
+        )
+    }
+
+    actual fun barq_results_knn_search(
+        results: BarqResultsPointer,
+        columnKey: PropertyKey,
+        queryVector: FloatArray,
+        k: Long,
+        ef: Long,
+        exact: Boolean
+    ): BarqResultsPointer {
+        return LongPointerWrapper(
+            barqc.barq_results_knn_search(
+                results.cptr(),
+                columnKey.key,
+                queryVector,
+                queryVector.size.toLong(),
+                k,
+                ef,
+                exact
+            )
+        )
+    }
+
     actual fun MemAllocator.barq_get_value(
         obj: BarqObjectPointer,
         key: PropertyKey

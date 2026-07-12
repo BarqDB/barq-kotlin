@@ -131,6 +131,7 @@ object ClassIds {
     val PRIMARY_KEY_ANNOTATION = ClassId(FqNames.PACKAGE_ANNOTATIONS, Name.identifier("PrimaryKey"))
     val INDEX_ANNOTATION = ClassId(FqNames.PACKAGE_ANNOTATIONS, Name.identifier("Index"))
     val FULLTEXT_ANNOTATION = ClassId(FqNames.PACKAGE_ANNOTATIONS, Name.identifier("FullText"))
+    val VECTOR_INDEX_ANNOTATION = ClassId(FqNames.PACKAGE_ANNOTATIONS, Name.identifier("VectorIndex"))
     val IGNORE_ANNOTATION = ClassId(FqNames.PACKAGE_ANNOTATIONS, Name.identifier("Ignore"))
     val PERSISTED_NAME_ANNOTATION = ClassId(FqNames.PACKAGE_ANNOTATIONS, Name.identifier("PersistedName"))
     val TRANSIENT_ANNOTATION = ClassId(FqName("kotlin.jvm"), Name.identifier("Transient"))
