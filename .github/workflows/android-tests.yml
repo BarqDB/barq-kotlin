@@ -47,11 +47,13 @@ jobs:
 
       # The instrumented app bundles the Android JNI engine; its cmake build
       # consumes the SWIG-generated wrapper, so generate it explicitly first
-      # (same reason as in build-jvm-native.yml).
+      # (same reason as in build-jvm-native.yml). ccache: the cinterop Android
+      # cmake config uses it as the compiler launcher, and the runner image
+      # does not ship it.
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y swig zlib1g-dev
+          sudo apt-get install -y swig zlib1g-dev ccache
 
       # Hardware acceleration for the emulator on Linux runners.
       - name: Enable KVM
