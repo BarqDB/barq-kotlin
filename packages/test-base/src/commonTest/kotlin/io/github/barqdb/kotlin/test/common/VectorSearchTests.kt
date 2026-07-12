@@ -20,12 +20,21 @@ import io.github.barqdb.kotlin.BarqConfiguration
 import io.github.barqdb.kotlin.entities.VectorSample
 import io.github.barqdb.kotlin.ext.barqListOf
 import io.github.barqdb.kotlin.ext.query
+import io.github.barqdb.kotlin.notifications.InitialResults
+import io.github.barqdb.kotlin.notifications.ResultsChange
+import io.github.barqdb.kotlin.notifications.UpdatedResults
 import io.github.barqdb.kotlin.test.platform.PlatformUtils
+import io.github.barqdb.kotlin.test.util.TestChannel
+import io.github.barqdb.kotlin.test.util.receiveOrFail
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 class VectorSearchTests {
     private lateinit var tmpDir: String
@@ -129,13 +138,103 @@ class VectorSearchTests {
     }
 
     @Test
-    fun knn_wrongDimensionThrowsThroughTheCApi() {
-        // A core-side error must still surface as an exception now that the JNI
-        // wrapper releases the query buffer on the error path instead of
-        // returning early.
+    fun knn_rejectsWrongDimensionEagerly() {
+        // The index knows its width, so a mismatched query is rejected Kotlin-side
+        // before it can become a deferred engine error (which could otherwise fire
+        // on whatever thread evaluates the results, including the notifier).
         seedAxes()
-        assertFailsWith<IllegalStateException> {
+        assertFailsWith<IllegalArgumentException> {
             barq.query<VectorSample>().find().knn("embedding", floatArrayOf(1f, 0f), k = 1)
         }
+    }
+
+    @Test
+    fun knn_engineErrorThrowsThroughTheCApi() {
+        // A core-side rejection (non-finite query values pass the Kotlin checks but
+        // fail engine validation) must still surface as an exception now that the
+        // JNI wrapper releases the query buffer on the error path instead of
+        // returning early.
+        seedAxes()
+        val e = assertFailsWith<IllegalArgumentException> {
+            barq.query<VectorSample>().find()
+                .knn("embedding", floatArrayOf(Float.NaN, 0f, 0f, 0f), k = 1)
+        }
+        assertTrue(e.message!!.contains("non-finite"), e.message)
+    }
+
+    @Test
+    fun knn_asFlow_emitsReorderOnNearerInsert() {
+        // Observing knn results must keep the knn ordering across updates: a write
+        // landing a nearer vector re-ranks the emission on the notifier thread.
+        seedAxes()
+        runBlocking {
+            val c = TestChannel<ResultsChange<VectorSample>>()
+            val observer = async {
+                barq.query<VectorSample>().find()
+                    .knn("embedding", floatArrayOf(1f, 0f, 0f, 0f), k = 2)
+                    .asFlow()
+                    .collect { c.send(it) }
+            }
+            c.receiveOrFail().let { change ->
+                assertIs<InitialResults<VectorSample>>(change)
+                assertEquals(listOf(1, 3), change.list.map { it.id })
+            }
+            barq.writeBlocking {
+                copyToBarq(VectorSample().apply { id = 5; label = "nearer-x"; embedding = barqListOf(0.95f, 0.05f, 0f, 0f) })
+            }
+            c.receiveOrFail().let { change ->
+                assertIs<UpdatedResults<VectorSample>>(change)
+                assertEquals(listOf(1, 5), change.list.map { it.id })
+            }
+            observer.cancel()
+            c.close()
+        }
+    }
+
+    @Test
+    fun knn_asFlow_emitsOnNearestDeleted() {
+        seedAxes()
+        runBlocking {
+            val c = TestChannel<ResultsChange<VectorSample>>()
+            val observer = async {
+                barq.query<VectorSample>().find()
+                    .knn("embedding", floatArrayOf(1f, 0f, 0f, 0f), k = 2)
+                    .asFlow()
+                    .collect { c.send(it) }
+            }
+            c.receiveOrFail().let { change ->
+                assertIs<InitialResults<VectorSample>>(change)
+                assertEquals(listOf(1, 3), change.list.map { it.id })
+            }
+            barq.writeBlocking {
+                delete(query<VectorSample>("id == 1").find().first())
+            }
+            c.receiveOrFail().let { change ->
+                assertIs<UpdatedResults<VectorSample>>(change)
+                val ids = change.list.map { it.id }
+                assertTrue(1 !in ids, "deleted object still in knn results: $ids")
+                assertEquals(3, ids.first()) // next-nearest moves up
+            }
+            observer.cancel()
+            c.close()
+        }
+    }
+
+    @Test
+    fun knn_frozenResultsKeepOrderAcrossWrites() {
+        // Results outside a write transaction are frozen at their version: later
+        // writes must not change an already-obtained knn ranking, while a fresh
+        // search sees the new data.
+        seedAxes()
+        val frozen = barq.query<VectorSample>().find()
+            .knn("embedding", floatArrayOf(1f, 0f, 0f, 0f), k = 2)
+        assertEquals(listOf(1, 3), frozen.map { it.id })
+        barq.writeBlocking {
+            copyToBarq(VectorSample().apply { id = 5; label = "nearer-x"; embedding = barqListOf(0.95f, 0.05f, 0f, 0f) })
+        }
+        assertEquals(listOf(1, 3), frozen.map { it.id }) // unchanged snapshot
+        val fresh = barq.query<VectorSample>().find()
+            .knn("embedding", floatArrayOf(1f, 0f, 0f, 0f), k = 2)
+        assertEquals(listOf(1, 5), fresh.map { it.id })
     }
 }

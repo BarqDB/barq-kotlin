@@ -117,6 +117,16 @@ internal class BarqResultsImpl<E : BaseBarqObject> constructor(
         val classMetadata = barq.schemaMetadata[classKey]
             ?: throw IllegalArgumentException("kNN search is only supported on results of Barq objects.")
         val propertyKey = classMetadata.getOrThrow(property).key
+        // Check the query width against the index eagerly (when the index knows its
+        // dimension) so a mismatch is a plain IllegalArgumentException here, never a
+        // deferred engine error — deferred errors would surface on whatever thread
+        // evaluates the results, including the notifier thread of an observed query.
+        if (BarqInterop.barq_has_vector_index(barq.dbPointer, classKey, propertyKey)) {
+            val dims = BarqInterop.barq_get_vector_index_config(barq.dbPointer, classKey, propertyKey).dimensions
+            require(dims == 0L || queryVector.size.toLong() == dims) {
+                "'queryVector' has ${queryVector.size} dimensions but the vector index on '$property' expects $dims."
+            }
+        }
         val knnResults = BarqInterop.barq_results_knn_search(
             nativePointer,
             propertyKey,

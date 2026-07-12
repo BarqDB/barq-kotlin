@@ -59,13 +59,16 @@ public interface BarqResults<T : BaseBarqObject> : List<T>, Deleteable, Versione
      * The search runs within this result set, so it composes with any filter that produced it, e.g.
      * `barq.query<Doc>("category = $0", "news").find().knn("embedding", queryVector, k = 10)`.
      *
-     * @param property the name of a `RealmList<Float>` property annotated with `@VectorIndex`.
+     * @param property the name of a `BarqList<Float>` property annotated with `@VectorIndex`.
      * @param queryVector the query vector; its length must match the index's `dimensions`.
      * @param k the number of neighbours to return.
      * @param ef the query-time search beam width, or 0 to use the index default. Higher = better recall, slower.
      * @param exact if true, run an exact flat scan for the true neighbours (ignores [ef] and the index).
      * @return the [k] nearest objects, ordered closest first.
-     * @throws IllegalArgumentException if [property] is not a vector-indexed property or [k] is not positive.
+     * @throws IllegalArgumentException if [property] is not a vector-indexed property, [k] is not
+     * positive, [ef] is negative, or [queryVector] is empty or does not match the index's dimension.
+     * @throws IllegalStateException if the engine rejects the query — e.g. a dimension mismatch
+     * against an index created with `dimensions = 0` (infer) that has not indexed a vector yet.
      */
     public fun knn(
         property: String,

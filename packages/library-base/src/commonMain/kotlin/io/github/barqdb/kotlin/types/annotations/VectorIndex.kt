@@ -19,7 +19,7 @@ import io.github.barqdb.kotlin.types.VectorEncoding
 import io.github.barqdb.kotlin.types.VectorMetric
 
 /**
- * Annotation marking a `RealmList<Float>` field as a vector (HNSW) index, enabling
+ * Annotation marking a `BarqList<Float>` field as a vector (HNSW) index, enabling
  * approximate and exact k-nearest-neighbour search on it.
  *
  * The index is local: it is built on the device when the Barq is opened and is
@@ -30,16 +30,21 @@ import io.github.barqdb.kotlin.types.VectorMetric
  * class Document : BarqObject {
  *     var id: Int = 0
  *     @VectorIndex(dimensions = 384, metric = VectorMetric.COSINE)
- *     var embedding: RealmList<Float> = realmListOf()
+ *     var embedding: BarqList<Float> = barqListOf()
  * }
  *
  * // nearest 10 documents to a query embedding, closest first
  * barq.query<Document>().find().knn("embedding", queryEmbedding, k = 10)
  * ```
  *
- * This annotation cannot be combined with [Index], [FullText] or [PrimaryKey].
+ * The annotated property must be a `BarqList<Float>` with a non-nullable element
+ * type, and this annotation cannot be combined with [Index], [FullText] or
+ * [PrimaryKey] — both are compile-time errors, as are out-of-range values for
+ * any parameter below.
  *
- * @param dimensions the length of every vector in the column, or 0 to infer it from the first vector.
+ * @param dimensions the length of every vector in the column, or 0 to infer it from the
+ * first vector. Note that the barq-js and barq-native SDKs cannot declare an inferred
+ * dimension, so declare a concrete value when the file is shared across SDKs.
  * @param metric the distance metric used to rank neighbours.
  * @param encoding how the index stores its copy of the vectors.
  * @param m the HNSW graph out-degree (higher = better recall, larger index).
