@@ -431,8 +431,13 @@ $result = SWIG_JavaArrayOutLonglong(jenv, (long long *)result, 2);
 %apply uint32_t[] {barq_class_key_t*};
 
 // Marshal the kNN query vector as a Java float[] (scoped to the query_data
-// parameter name so no other float* is affected).
+// parameter name so no other float* is affected). The query is input-only, so
+// drop the default copy-back argout: SetFloatArrayRegion is not on the JNI
+// pending-exception whitelist, and running it after a failed call (which falls
+// through with the exception pending, see below) aborts under Android's
+// CheckJNI as "called with pending exception".
 %apply float[] {const float* query_data};
+%typemap(argout) const float* query_data "";
 
 // barq_results_knn_search takes that float[] as an argument, and its pinned JNI
 // buffer plus the C++ heap copy must be released even when the call fails. The
